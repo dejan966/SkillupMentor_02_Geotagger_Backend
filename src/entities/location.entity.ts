@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Guess } from './guess.entity';
 
 @Entity()
 export class Location{
@@ -13,4 +14,7 @@ export class Location{
     
     @Column()
     longitude:number;
+
+    @OneToMany(() => Guess, (guess) => guess.location)
+    guesses: Guess[];
 }

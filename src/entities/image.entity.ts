@@ -13,5 +13,6 @@ export class Image{
   @ManyToOne(() => User, (user) => user.images, { onDelete: 'SET NULL' })
   user: User;
 
- 
+  @OneToMany(() => Guess, (guess) => guess.image)
+  guesses: Guess[];
 }
