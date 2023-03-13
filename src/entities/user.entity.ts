@@ -2,6 +2,7 @@ import { Exclude } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Guess } from './guess.entity';
 import { Image } from './image.entity';
+import { Log } from './log.entity';
 
 @Entity()
 export class User {
@@ -36,4 +37,7 @@ export class User {
   
   @OneToMany(() => Guess, (guess) => guess.user)
   guesses: Guess[];
+  
+  @OneToMany(() => Log, (log) => log.user)
+  logs: Log[];
 }
