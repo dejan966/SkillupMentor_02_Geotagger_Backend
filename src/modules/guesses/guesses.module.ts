@@ -7,6 +7,6 @@ import { Guess } from 'src/entities/guess.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Guess])],
   controllers: [GuessesController],
-  providers: [GuessesService]
+  providers: [GuessesService],
 })
 export class GuessesModule {}
