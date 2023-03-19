@@ -10,12 +10,14 @@ import { GuessesModule } from './guesses/guesses.module';
 import { ComponentsModule } from './components/components.module';
 import { ActionsModule } from './actions/actions.module';
 import { LogsModule } from './logs/logs.module';
+import { configValidationSchema } from 'src/config/schema.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env'],
+      validationSchema: configValidationSchema
     }),
     DatabaseModule,
     UsersModule,

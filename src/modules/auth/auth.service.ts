@@ -8,7 +8,7 @@ import { CookieType, JwtType, TokenPayload } from 'src/interfaces/auth.interface
 import { UserData } from 'src/interfaces/user.interface';
 import Logging from 'src/library/Logging';
 import { UsersService } from '../users/users.service';
-import { compareHash, hash } from '../utils/bcrypt';
+import { compareHash, hash } from 'src/utils/bcrypt';
 import { RegisterUserDto } from './dto/register-user.dto';
 
 @Injectable()
