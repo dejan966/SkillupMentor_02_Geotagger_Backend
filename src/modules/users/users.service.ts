@@ -31,11 +31,12 @@ export class UsersService extends AbstractService {
     }
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const {avatar, password, confirm_password,...rest} = updateUserDto
     const user = await this.findById(id);
     try {
       for (const key in user) {
-        if (updateUserDto[key]) user[key] = updateUserDto[key];
+        if (rest[key]) user[key] = rest[key];
       }
       return this.usersRepository.save(user);
     } catch (error) {
@@ -61,15 +62,5 @@ export class UsersService extends AbstractService {
     }
     user.avatar = avatar;
     return this.usersRepository.save(user);
-  }
-
-  async remove(id: number) {
-    const user = await this.findById(id)
-    try {
-      return this.usersRepository.remove(user);
-    } catch (error) {
-      Logging.error(error);
-      throw new InternalServerErrorException('Something went wrong while deleting the account');
-    }
   }
 }
