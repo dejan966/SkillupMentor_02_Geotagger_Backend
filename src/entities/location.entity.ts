@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { IsDecimal } from 'class-validator';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Double } from 'typeorm';
 import { Guess } from './guess.entity';
 
 @Entity()
@@ -9,10 +10,10 @@ export class Location{
     @Column({ nullable: true })
     name:string;
 
-    @Column()
+    @Column({type:'decimal'})
     latitude:number;
     
-    @Column()
+    @Column({type:'decimal'})
     longitude:number;
 
     @Column()

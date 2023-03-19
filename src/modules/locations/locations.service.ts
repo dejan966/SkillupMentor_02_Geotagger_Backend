@@ -14,8 +14,8 @@ export class LocationsService extends AbstractService {
     super(locationsRepository)
   }
 
-  async create(createLocationDto: CreateLocationDto) {
+  /* async create(createLocationDto: CreateLocationDto) {
     const newLocation = this.locationsRepository.create(createLocationDto);
     return this.locationsRepository.save(newLocation);
-  }
+  } */
 }

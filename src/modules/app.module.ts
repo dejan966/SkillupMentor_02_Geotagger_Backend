@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,6 +11,7 @@ import { ComponentsModule } from './components/components.module';
 import { ActionsModule } from './actions/actions.module';
 import { LogsModule } from './logs/logs.module';
 import { configValidationSchema } from 'src/config/schema.config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -29,6 +30,9 @@ import { configValidationSchema } from 'src/config/schema.config';
     LogsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor},
+    AppService,
+  ],
 })
 export class AppModule {}
