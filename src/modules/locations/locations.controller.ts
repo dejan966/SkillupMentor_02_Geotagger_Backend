@@ -17,6 +17,11 @@ export class LocationsController {
     return this.locationsService.findAll();
   }
 
+  @Get('picture')
+  async findByPicture(pic: string){
+    return this.locationsService.findBy(pic)
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.locationsService.findById(id);
