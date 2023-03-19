@@ -31,7 +31,7 @@ export abstract class AbstractService {
     }
   }
 
-  async findById(id: string, relations = []): Promise<any> {
+  async findById(id: number, relations = []): Promise<any> {
     try {
       const element = await this.repository.findOne({
         where: { id },
@@ -47,7 +47,7 @@ export abstract class AbstractService {
     }
   }
 
-  async remove(id: string): Promise<any> {
+  async remove(id: number): Promise<any> {
     const element = await this.findById(id)
     try {
       return this.repository.remove(element)

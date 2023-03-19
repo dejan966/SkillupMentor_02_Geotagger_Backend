@@ -6,13 +6,16 @@ import { Repository } from 'typeorm';
 import { compareHash, hash } from 'src/utils/bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AbstractService } from '../common/abstract.service';
 
 @Injectable()
-export class UsersService {
+export class UsersService extends AbstractService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-  ) {}
+  ) {
+    super(usersRepository)
+  }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = await this.findBy({ email: createUserDto.email });
@@ -26,19 +29,6 @@ export class UsersService {
       Logging.error(error);
       throw new BadRequestException('Something went wrong while creating a new user.');
     }
-  }
-
-  async findAll() {
-    return await this.usersRepository.find();
-  }
-
-  async findBy(condition) {
-    return this.usersRepository.findOne({ where: condition });
-  }
-
-  async findById(id: number) {
-    const user = await this.usersRepository.findOne({ where: { id }}) as User;
-    return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
