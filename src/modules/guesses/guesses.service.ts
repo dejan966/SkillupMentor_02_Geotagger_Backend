@@ -1,26 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Guess } from 'src/entities/guess.entity';
+import { Location } from 'src/entities/location.entity';
+import { Repository } from 'typeorm';
+import { AbstractService } from '../common/abstract.service';
 import { CreateGuessDto } from './dto/create-guess.dto';
-import { UpdateGuessDto } from './dto/update-guess.dto';
 
 @Injectable()
-export class GuessesService {
-  create(createGuessDto: CreateGuessDto) {
-    return 'This action adds a new guess';
+export class GuessesService extends AbstractService {
+  constructor(
+    @InjectRepository(Guess)
+    private readonly guessesRepository:Repository<Guess>,
+  ){
+    super(guessesRepository)
   }
 
-  findAll() {
-    return `This action returns all guesses`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} guess`;
-  }
-
-  update(id: number, updateGuessDto: UpdateGuessDto) {
-    return `This action updates a #${id} guess`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} guess`;
+  async create(createGuessDto: CreateGuessDto) {
+    const newGuess = this.guessesRepository.create(createGuessDto);
+    return this.guessesRepository.save(newGuess);
   }
 }
