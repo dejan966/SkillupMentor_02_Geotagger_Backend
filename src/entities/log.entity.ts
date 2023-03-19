@@ -13,9 +13,6 @@ export class Log{
   
   @ManyToOne(() => Component, (component) => component.logs, { onDelete: 'SET NULL' })
   component: Component;
-  
-  @Column()
-  new_value: string;
 
   @ManyToOne(() => User, (user) => user.logs, { onDelete: 'SET NULL' })
   user: User;

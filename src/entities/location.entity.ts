@@ -15,6 +15,9 @@ export class Location{
     @Column()
     longitude:number;
 
+    @Column()
+    image_url:string
+    
     @OneToMany(() => Guess, (guess) => guess.location)
     guesses: Guess[];
 }

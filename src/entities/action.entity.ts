@@ -12,6 +12,9 @@ export class Action{
   @Column()
   url: string;
 
+  @Column()
+  new_value: string;
+
   @OneToMany(() => Log, (log) => log.action)
   logs: Log[];
 }
