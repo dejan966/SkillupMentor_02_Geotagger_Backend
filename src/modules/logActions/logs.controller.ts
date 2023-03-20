@@ -18,7 +18,7 @@ export class LogsController {
 
   @Get()
   async findAll() {
-    return this.logsService.findAll();
+    return this.logsService.findAll(['action', 'component', 'user']);
   }
 
   @Get(':id')

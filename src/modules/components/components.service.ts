@@ -15,10 +15,10 @@ export class ComponentsService extends AbstractService {
   ){
     super(componentsRepository)
   }
-/*   async create(createComponentDto: {name:string}) {
+  async create(createComponentDto: {component:string}) {
     const newComponent = this.componentsRepository.create({...createComponentDto});
     return this.componentsRepository.save(newComponent);
-  } */
+  }
 
   async update(id: number, updateComponentDto: {name:string}) {
     const component = await this.findById(id);

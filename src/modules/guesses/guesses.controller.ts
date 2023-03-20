@@ -19,13 +19,13 @@ export class GuessesController {
   @Get()
   @UseGuards(JwtAuthGuard)
   async findAll() {
-    return this.guessesService.findAll();
+    return this.guessesService.findAll(['location', 'user']);
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: number) {
-    return this.guessesService.findById(id);
+    return this.guessesService.findById(id, ['location', 'user']);
   }
   
   @Patch(':id')
