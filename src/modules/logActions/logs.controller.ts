@@ -4,12 +4,14 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateLogDto } from './dto/create-log.dto';
 import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { User } from 'src/entities/user.entity';
+import { UpdateLogDto } from './dto/update-log.dto';
 
 @Controller('logs')
 export class LogsController {
   constructor(private readonly logsService: LogsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   async create(@Body() createLogDto: CreateLogDto, @GetCurrentUser() user:User) {
     return this.logsService.create(createLogDto, user);
   }
@@ -23,6 +25,12 @@ export class LogsController {
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: number) {
     return this.logsService.findById(id);
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  async update(@Param('id') id:number, @Body() updateLogDto: UpdateLogDto) {
+    return this.logsService.update(id, updateLogDto);
   }
 
   @Delete(':id')
