@@ -19,7 +19,7 @@ export class ActionsController {
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.actionsService.findOne(id);
+    return this.actionsService.findById(id);
   }
 
   @Patch(':id')
