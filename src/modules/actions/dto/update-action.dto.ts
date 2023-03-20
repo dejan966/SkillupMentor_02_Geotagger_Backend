@@ -1,4 +1,12 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateActionDto } from './create-action.dto';
+import { IsOptional } from 'class-validator';
 
-export class UpdateActionDto extends PartialType(CreateActionDto) {}
+export class UpdateActionDto {
+    @IsOptional()
+    action: string;
+    
+    @IsOptional()
+    url: string;
+  
+    @IsOptional()
+    new_value: string;
+}
