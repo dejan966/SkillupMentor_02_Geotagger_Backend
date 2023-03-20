@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateActionDto {
-    @IsOptional()
+    @IsNotEmpty()
     action: string;
     
     @IsNotEmpty()

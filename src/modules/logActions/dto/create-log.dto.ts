@@ -9,7 +9,5 @@ export class CreateLogDto {
 
     @IsNotEmpty()
     component:Component
-
-    @IsNotEmpty()
     user:User
 }

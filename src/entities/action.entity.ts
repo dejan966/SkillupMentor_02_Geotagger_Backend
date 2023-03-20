@@ -12,7 +12,7 @@ export class Action{
   @Column()
   url: string;
 
-  @Column()
+  @Column({ nullable: true })
   new_value: string;
 
   @OneToMany(() => Log, (log) => log.action)

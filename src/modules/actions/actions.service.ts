@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Action } from 'src/entities/action.entity';
 import Logging from 'src/library/Logging';
@@ -16,8 +16,18 @@ export class ActionsService extends AbstractService {
     super(actionsRepository)
   }
   async create(createActionDto: CreateActionDto) {
-    const newAction = this.actionsRepository.create(createActionDto);
-    return this.actionsRepository.save(newAction);
+    const action = await this.findBy({ action: createActionDto.action });
+    if (action) {
+      throw new BadRequestException('This action already exists.');
+    }
+    try {
+      const newAction = this.actionsRepository.create({...createActionDto});
+      return this.actionsRepository.save(newAction);
+    } catch (error) {
+      Logging.error(error);
+      throw new BadRequestException('Something went wrong while creating a new action.');
+    }
+    
   }
 
   async update(id: number, updateActionDto: UpdateActionDto) {
