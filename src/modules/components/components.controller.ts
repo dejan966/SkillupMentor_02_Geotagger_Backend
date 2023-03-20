@@ -7,10 +7,10 @@ import { UpdateComponentDto } from './dto/update-component.dto';
 export class ComponentsController {
   constructor(private readonly componentsService: ComponentsService) {}
 
-  @Post()
-  async create(@Body() createComponentDto: CreateComponentDto) {
+ /*  @Post()
+  async create(@Body() createComponentDto: {name:string}) {
     return this.componentsService.create(createComponentDto);
-  }
+  } */
 
   @Get()
   async findAll() {
@@ -19,11 +19,11 @@ export class ComponentsController {
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.componentsService.findOne(id);
+    return this.componentsService.findById(id);
   }
 
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateComponentDto: UpdateComponentDto) {
+  async update(@Param('id') id: number, @Body() updateComponentDto: {name:string}) {
     return this.componentsService.update(id, updateComponentDto);
   }
 
