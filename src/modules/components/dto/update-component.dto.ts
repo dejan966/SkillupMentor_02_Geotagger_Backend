@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateComponentDto } from './create-component.dto';
+import { IsOptional } from 'class-validator';
 
-export class UpdateComponentDto extends PartialType(CreateComponentDto) {}
+export class UpdateComponentDto {
+    @IsOptional()
+    name:string
+}

@@ -8,27 +8,27 @@ export class ComponentsController {
   constructor(private readonly componentsService: ComponentsService) {}
 
   @Post()
-  create(@Body() createComponentDto: CreateComponentDto) {
+  async create(@Body() createComponentDto: CreateComponentDto) {
     return this.componentsService.create(createComponentDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.componentsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.componentsService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    return this.componentsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateComponentDto: UpdateComponentDto) {
-    return this.componentsService.update(+id, updateComponentDto);
+  async update(@Param('id') id: number, @Body() updateComponentDto: UpdateComponentDto) {
+    return this.componentsService.update(id, updateComponentDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.componentsService.remove(+id);
+  async remove(@Param('id') id: number) {
+    return this.componentsService.remove(id);
   }
 }
