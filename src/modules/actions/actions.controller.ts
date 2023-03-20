@@ -8,27 +8,27 @@ export class ActionsController {
   constructor(private readonly actionsService: ActionsService) {}
 
   @Post()
-  create(@Body() createActionDto: CreateActionDto) {
+  async create(@Body() createActionDto: CreateActionDto) {
     return this.actionsService.create(createActionDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.actionsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.actionsService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    return this.actionsService.findById(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateActionDto: UpdateActionDto) {
-    return this.actionsService.update(+id, updateActionDto);
+  async update(@Param('id') id: number, @Body() updateActionDto: UpdateActionDto) {
+    return this.actionsService.update(id, updateActionDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.actionsService.remove(+id);
+  async remove(@Param('id') id: number) {
+    return this.actionsService.remove(id);
   }
 }
