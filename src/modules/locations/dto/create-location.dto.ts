@@ -11,5 +11,5 @@ export class CreateLocationDto {
     longitude:number
 
     @IsNotEmpty()
-    image_url:number
+    image_url:string
 }

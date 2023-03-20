@@ -19,15 +19,15 @@ export class GuessesService extends AbstractService {
   }
 
   async create(createGuessDto: CreateGuessDto, user:User) {
-    const newGuess = this.guessesRepository.create({...createGuessDto, user},);
+    const newGuess = this.guessesRepository.create({...createGuessDto, user});
     return this.guessesRepository.save(newGuess);
   }
 
-  async update(id:number, updateGuessDro: UpdateGuessDto){
+  async update(id:number, updateGuessDto: UpdateGuessDto){
     const guess = await this.findById(id);
     try {
       for (const key in guess) {
-        if (updateGuessDro[key]) guess[key] = updateGuessDro[key];
+        if (updateGuessDto[key]) guess[key] = updateGuessDto[key];
       }
       return this.guessesRepository.save(guess);
     } catch (error) {
