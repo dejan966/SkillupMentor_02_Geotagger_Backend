@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { CreateLocationDto } from './dto/create-location.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 
 @Controller('locations')
 export class LocationsController {
@@ -17,16 +18,19 @@ export class LocationsController {
   }
 
   @Get('picture')
+  @UseGuards(JwtAuthGuard)
   async findByPicture(pic: string){
     return this.locationsService.findBy(pic)
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: number) {
     return this.locationsService.findById(id);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   async remove(@Param('id') id: number) {
     return this.locationsService.remove(id);
   }
