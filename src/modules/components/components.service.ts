@@ -16,7 +16,7 @@ export class ComponentsService extends AbstractService {
     super(componentsRepository)
   }
 /*   async create(createComponentDto: {name:string}) {
-    const newComponent = this.componentsRepository.create(createComponentDto);
+    const newComponent = this.componentsRepository.create({...createComponentDto});
     return this.componentsRepository.save(newComponent);
   } */
 

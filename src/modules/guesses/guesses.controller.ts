@@ -30,7 +30,7 @@ export class GuessesController {
   
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  async update(@Param('id') id: number, updateGuessDto:UpdateGuessDto) {
+  async update(@Param('id') id: number, @Body() updateGuessDto:UpdateGuessDto) {
     return this.guessesService.update(id, updateGuessDto);
   }
 

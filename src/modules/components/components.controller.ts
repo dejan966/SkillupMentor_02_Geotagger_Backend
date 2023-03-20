@@ -7,7 +7,7 @@ import { UpdateComponentDto } from './dto/update-component.dto';
 export class ComponentsController {
   constructor(private readonly componentsService: ComponentsService) {}
 
- /*  @Post()
+/*   @Post()
   async create(@Body() createComponentDto: {name:string}) {
     return this.componentsService.create(createComponentDto);
   } */
