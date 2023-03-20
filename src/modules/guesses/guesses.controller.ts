@@ -4,6 +4,7 @@ import { CreateGuessDto } from './dto/create-guess.dto';
 import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { User } from 'src/entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { UpdateGuessDto } from './dto/update-guess.dto';
 
 @Controller('guesses')
 export class GuessesController {
@@ -25,6 +26,12 @@ export class GuessesController {
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: number) {
     return this.guessesService.findById(id);
+  }
+  
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  async update(@Param('id') id: number, updateGuessDto:UpdateGuessDto) {
+    return this.guessesService.update(id, updateGuessDto);
   }
 
   @Delete(':id')
