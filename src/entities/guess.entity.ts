@@ -13,6 +13,12 @@ export class Guess{
   @ManyToOne(() => User, (user) => user.guesses, { onDelete: 'SET NULL' })
   user: User;
 
-  @Column()
+  @Column({type:'decimal', default:0.0})
+  latitude:number;
+  
+  @Column({type:'decimal', default:0.0})
+  longitude:number;
+
+  @Column({default:false})
   value:boolean;
 }

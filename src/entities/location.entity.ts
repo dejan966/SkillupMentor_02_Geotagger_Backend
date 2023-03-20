@@ -10,10 +10,10 @@ export class Location{
     @Column({ nullable: true })
     name:string;
 
-    @Column({type:'decimal'})
+    @Column({type:'decimal', default:0.0})
     latitude:number;
     
-    @Column({type:'decimal'})
+    @Column({type:'decimal', default:0.0})
     longitude:number;
 
     @Column()
