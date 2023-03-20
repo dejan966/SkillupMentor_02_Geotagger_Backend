@@ -7,10 +7,10 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 export class LocationsController {
   constructor(private readonly locationsService: LocationsService) {}
 
-/*   @Post()
+  @Post()
   async create(@Body() createLocationDto: CreateLocationDto) {
     return this.locationsService.create(createLocationDto);
-  } */
+  }
 
   @Get()
   async findAll() {
