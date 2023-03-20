@@ -9,7 +9,7 @@ import { LocationsModule } from './locations/locations.module';
 import { GuessesModule } from './guesses/guesses.module';
 import { ComponentsModule } from './components/components.module';
 import { ActionsModule } from './actions/actions.module';
-import { LogsModule } from './logs/logs.module';
+import { LogsModule } from './logActions/logs.module';
 import { configValidationSchema } from 'src/config/schema.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
