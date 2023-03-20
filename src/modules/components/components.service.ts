@@ -1,26 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Component } from 'src/entities/component.entity';
+import Logging from 'src/library/Logging';
+import { Repository } from 'typeorm';
+import { AbstractService } from '../common/abstract.service';
 import { CreateComponentDto } from './dto/create-component.dto';
 import { UpdateComponentDto } from './dto/update-component.dto';
 
 @Injectable()
-export class ComponentsService {
-  create(createComponentDto: CreateComponentDto) {
-    return 'This action adds a new component';
+export class ComponentsService extends AbstractService {
+  constructor(
+    @InjectRepository(Component)
+    private readonly componentsRepository:Repository<Component>
+  ){
+    super(componentsRepository)
   }
+/*   async create(createComponentDto: {name:string}) {
+    const newComponent = this.componentsRepository.create(createComponentDto);
+    return this.componentsRepository.save(newComponent);
+  } */
 
-  findAll() {
-    return `This action returns all components`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} component`;
-  }
-
-  update(id: number, updateComponentDto: UpdateComponentDto) {
-    return `This action updates a #${id} component`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} component`;
+  async update(id: number, updateComponentDto: {name:string}) {
+    const component = await this.findById(id);
+    try {
+      component[component] = updateComponentDto.name
+      return this.componentsRepository.save(component);
+    } catch (error) {
+      Logging.log(error)
+      throw new NotFoundException('Something went wrong while updating the data.');
+    }
   }
 }

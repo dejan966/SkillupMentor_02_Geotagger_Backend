@@ -7,28 +7,28 @@ import { UpdateComponentDto } from './dto/update-component.dto';
 export class ComponentsController {
   constructor(private readonly componentsService: ComponentsService) {}
 
-  @Post()
-  create(@Body() createComponentDto: CreateComponentDto) {
+ /*  @Post()
+  async create(@Body() createComponentDto: {name:string}) {
     return this.componentsService.create(createComponentDto);
-  }
+  } */
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.componentsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.componentsService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    return this.componentsService.findById(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateComponentDto: UpdateComponentDto) {
-    return this.componentsService.update(+id, updateComponentDto);
+  async update(@Param('id') id: number, @Body() updateComponentDto: {name:string}) {
+    return this.componentsService.update(id, updateComponentDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.componentsService.remove(+id);
+  async remove(@Param('id') id: number) {
+    return this.componentsService.remove(id);
   }
 }
