@@ -8,5 +8,5 @@ export class CreateActionDto {
     url: string;
   
     @IsOptional()
-    new_value: string;
+    new_value?: string;
 }

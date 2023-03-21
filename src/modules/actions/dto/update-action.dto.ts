@@ -2,11 +2,11 @@ import { IsOptional } from 'class-validator';
 
 export class UpdateActionDto {
     @IsOptional()
-    action: string;
+    action?: string;
     
     @IsOptional()
-    url: string;
+    url?: string;
   
     @IsOptional()
-    new_value: string;
+    new_value?: string;
 }

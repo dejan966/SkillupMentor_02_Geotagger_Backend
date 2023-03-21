@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { LogsService } from './logs.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateLogDto } from './dto/create-log.dto';
@@ -7,6 +7,7 @@ import { User } from 'src/entities/user.entity';
 import { UpdateLogDto } from './dto/update-log.dto';
 
 @Controller('logs')
+@UseInterceptors(ClassSerializerInterceptor)
 export class LogsController {
   constructor(private readonly logsService: LogsService) {}
 
@@ -24,7 +25,7 @@ export class LogsController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: number) {
-    return this.logsService.findById(id);
+    return this.logsService.findById(id, ['action', 'component', 'user']);
   }
 
   @Patch(':id')

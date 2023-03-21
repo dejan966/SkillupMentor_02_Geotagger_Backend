@@ -8,7 +8,7 @@ export class ComponentsController {
   constructor(private readonly componentsService: ComponentsService) {}
 
   @Post()
-  async create(@Body() createComponentDto: {component:string}) {
+  async create(@Body() createComponentDto: CreateComponentDto) {
     return this.componentsService.create(createComponentDto);
   }
 
@@ -23,7 +23,7 @@ export class ComponentsController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateComponentDto: {name:string}) {
+  async update(@Param('id') id: number, @Body() updateComponentDto: CreateComponentDto) {
     return this.componentsService.update(id, updateComponentDto);
   }
 

@@ -7,5 +7,5 @@ export class UpdateLogDto {
     action?:Action;
 
     @IsOptional()
-    component?:Component
+    component?:Component;
 }

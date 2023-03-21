@@ -1,7 +1,8 @@
 import { Exclude } from 'class-transformer';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
 import { Guess } from './guess.entity';
 import { Log } from './log.entity';
+import { Role } from './role.entity';
 
 @Entity()
 export class User {
@@ -26,6 +27,9 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @ManyToOne(() => Role, (role) => role.users, { onDelete: 'SET NULL' })
+  role:Role;
 
   @Column({ nullable: true, default: null })
   @Exclude()

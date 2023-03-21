@@ -16,18 +16,8 @@ export class ActionsService extends AbstractService {
     super(actionsRepository)
   }
   async create(createActionDto: CreateActionDto) {
-    const action = await this.findBy({ action: createActionDto.action });
-    if (action) {
-      throw new BadRequestException('This action already exists.');
-    }
-    try {
-      const newAction = this.actionsRepository.create({...createActionDto});
-      return this.actionsRepository.save(newAction);
-    } catch (error) {
-      Logging.error(error);
-      throw new BadRequestException('Something went wrong while creating a new action.');
-    }
-    
+    const newAction = this.actionsRepository.create({...createActionDto});
+    return this.actionsRepository.save(newAction);
   }
 
   async update(id: number, updateActionDto: UpdateActionDto) {

@@ -25,7 +25,7 @@ export class LocationsService extends AbstractService {
     const location = await this.findById(id);
     try {
       for (const key in location) {
-        if (updateLocationDto[key]) location[key] = updateLocationDto[key];
+        if (updateLocationDto[key] !== undefined) location[key] = updateLocationDto[key];
       }
       return this.locationsRepository.save(location);
     } catch (error) {

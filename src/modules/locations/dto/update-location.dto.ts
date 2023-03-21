@@ -5,11 +5,11 @@ export class UpdateLocationDto {
     name?:string;
 
     @IsOptional()
-    latitude:number
+    latitude?:number
 
     @IsOptional()
-    longitude:number
+    longitude?:number
 
     @IsOptional()
-    image_url:number
+    image_url?:number
 }

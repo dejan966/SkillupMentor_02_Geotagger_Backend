@@ -10,10 +10,14 @@ import { UpdateGuessDto } from './dto/update-guess.dto';
 export class GuessesController {
   constructor(private readonly guessesService: GuessesService) {}
 
-  @Post()
+  @Post('location/:id')
   @UseGuards(JwtAuthGuard)
-  async create(@Body() createGuessDto: CreateGuessDto, @GetCurrentUser() user: User) {
-    return this.guessesService.create(createGuessDto, user);
+  async create(
+    @Body() createGuessDto: CreateGuessDto, 
+    @GetCurrentUser() user: User,
+    @Param('id') locationId:number
+    ) {
+    return this.guessesService.create(createGuessDto, user, locationId);
   }
 
   @Get()
