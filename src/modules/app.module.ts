@@ -22,9 +22,9 @@ import { RolesModule } from './roles/roles.module';
       validationSchema: configValidationSchema
     }),
     DatabaseModule,
+    AuthModule,
     UsersModule,
     RolesModule,
-    AuthModule,
     LocationsModule,
     GuessesModule,
     ActionsModule,
