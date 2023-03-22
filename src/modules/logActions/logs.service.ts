@@ -22,7 +22,7 @@ export class LogsService extends AbstractService {
   }
 
   async create(createLogDto: CreateLogDto, user:User) {
-    const action = await this.actionsService.findBy({action:createLogDto.action.action})
+    const action = await this.actionsService.findBy({action:createLogDto.action.action, url:createLogDto.action.url, new_value:createLogDto.action.new_value})
     if(!action){
       return this.actionsService.create({...createLogDto.action});
     }

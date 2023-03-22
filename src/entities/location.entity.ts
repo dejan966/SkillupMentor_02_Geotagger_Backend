@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Guess } from './guess.entity';
 
 @Entity()
@@ -16,7 +16,13 @@ export class Location{
     longitude:number;
 
     @Column()
-    image_url:string
+    image_url:string;
+
+    @CreateDateColumn()
+    created_at: string;
+  
+    @UpdateDateColumn()
+    updated_at: string;
     
     @OneToMany(() => Guess, (guess) => guess.location)
     guesses: Guess[];

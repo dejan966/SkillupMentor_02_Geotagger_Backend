@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Location } from './location.entity';
 import { User } from './user.entity';
 
@@ -21,4 +21,10 @@ export class Guess{
 
   @Column({default:false})
   value:boolean;
+
+  @CreateDateColumn()
+  created_at: string;
+
+  @UpdateDateColumn()
+  updated_at: string;
 }
