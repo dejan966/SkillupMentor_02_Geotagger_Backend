@@ -16,23 +16,14 @@ export class ComponentsService extends AbstractService {
     super(componentsRepository)
   }
   async create(createComponentDto: CreateComponentDto) {
-    const component = await this.findBy({ component: createComponentDto.component });
-    if (component) {
-      throw new BadRequestException('This component already exists.');
-    }
-    try {
-      const newComponent = this.componentsRepository.create({...createComponentDto});
-      return this.componentsRepository.save(newComponent);
-    } catch (error) {
-      Logging.error(error);
-      throw new BadRequestException('Something went wrong while creating a new componenet.');
-    }
+    const newComponent = this.componentsRepository.create({...createComponentDto});
+    return this.componentsRepository.save(newComponent);
   }
 
-  async update(id: number, updateComponentDto: CreateComponentDto) {
+  async update(id: number, updateComponentDto: UpdateComponentDto) {
     const component = await this.findById(id);
     try {
-      component[component] = updateComponentDto.component
+      component.component = updateComponentDto.component
       return this.componentsRepository.save(component);
     } catch (error) {
       Logging.log(error)

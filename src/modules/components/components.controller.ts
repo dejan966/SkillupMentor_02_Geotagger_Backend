@@ -23,7 +23,7 @@ export class ComponentsController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateComponentDto: CreateComponentDto) {
+  async update(@Param('id') id: number, @Body() updateComponentDto: UpdateComponentDto) {
     return this.componentsService.update(id, updateComponentDto);
   }
 

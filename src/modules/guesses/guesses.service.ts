@@ -21,7 +21,7 @@ export class GuessesService extends AbstractService {
   }
 
   async create(createGuessDto: CreateGuessDto, user:User, locationId:number) {
-    const location = this.locationsService.findById(locationId) as unknown as Location
+    const location = await this.locationsService.findById(locationId) as unknown as Location
     const newGuess = await this.guessesRepository.create({...createGuessDto, location, user});
     return this.guessesRepository.save(newGuess);
   }

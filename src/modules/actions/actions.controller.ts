@@ -20,14 +20,6 @@ export class ActionsController {
     return this.actionsService.findAll();
   }
 
-/*   @Get('action')
-  async findByAction() {
-    const action = await this.actionsService.findBy({action:'deleted value'});
-    if(!action){
-      console.log('0')
-    }
-  } */
-
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.actionsService.findById(id);

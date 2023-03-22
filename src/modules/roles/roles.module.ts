@@ -10,4 +10,4 @@ import { Role } from 'src/entities/role.entity';
   providers: [RolesService],
   exports: [RolesService],
 })
-export class UsersModule {}
+export class RolesModule {}

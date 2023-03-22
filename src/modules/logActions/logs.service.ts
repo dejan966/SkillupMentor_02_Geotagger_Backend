@@ -40,15 +40,7 @@ export class LogsService extends AbstractService {
   }
 
   async update(id: number, updateLogDto: UpdateLogDto) {
-    const log = await this.findById(id);
-    try {
-      for (const key in log) {
-        if (updateLogDto[key] !== undefined) log[key] = updateLogDto[key];
-      }
-      return this.logsRepository.save(log);
-    } catch (error) {
-      Logging.log(error)
-      throw new NotFoundException('Something went wrong while updating the data.');
-    }
+    const updatedAction = await this.actionsService.update(updateLogDto.action.id, updateLogDto.action)
+    const updatedComponent = await this.componentService.update(updateLogDto.component.id, updateLogDto.component)
   }
 }
