@@ -111,6 +111,24 @@ export class AuthService {
     }
   }
 
+  //verifying a users refresh token and sending a request for password refresh token
+  async passwordResetToken(req: Request){
+    const user = await this.usersService.findBy({ refresh_token: req.cookies.refresh_token })
+    if (!user) {
+      throw new ForbiddenException()
+    }
+    try {
+      await this.jwtService.verifyAsync(user.refresh_token, {
+        secret: this.configService.get('JWT_REFRESH_SECRET'),
+      })
+    } catch (error) {
+      Logging.error(error)
+      throw new UnauthorizedException('Something went wrong while refreshing tokens')
+    }
+    const token = await this.generateToken(user.id, user.email, JwtType.ACCESS_TOKEN)
+    return token
+  }
+
   async generateToken(userId: number, email: string, type: JwtType): Promise<string> {
     try {
       const payload: TokenPayload = { sub: userId, name: email, type }
@@ -125,6 +143,9 @@ export class AuthService {
             expiresIn: `${this.configService.get('JWT_REFRESH_SECRET_EXPIRES')}s`,
           })
           break
+        case JwtType.PASSWORD_RESET_TOKEN:
+          token = await this.jwtService.signAsync(payload)
+          break
         default:
           throw new BadRequestException('Access denied')
       }
@@ -136,6 +157,7 @@ export class AuthService {
       throw new InternalServerErrorException('Something went wrong while generating a new token')
     }
   }
+  
   async generateCookie(token: string, type: CookieType): Promise<string> {
     try {
       let cookie: string

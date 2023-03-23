@@ -41,7 +41,7 @@ export class LogsService extends AbstractService {
   }
 
   async update(id: number, updateLogDto: UpdateLogDto) {
-    const updatedAction = await this.actionsService.update(updateLogDto.action.id, updateLogDto.action)
-    const updatedComponent = await this.componentService.update(updateLogDto.component.id, updateLogDto.component)
+    await this.actionsService.update(updateLogDto.action.id, updateLogDto.action)
+    await this.componentService.update(updateLogDto.component.id, updateLogDto.component)
   }
 }
