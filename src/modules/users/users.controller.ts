@@ -22,9 +22,14 @@ export class UsersController {
     return user;
   }
 
+  @Get()
+  async findAll(){
+    return this.usersService.findAll(['role', 'logs.action', 'logs.component']);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.usersService.findById(id);
+    return this.usersService.findById(id, ['role', 'logs.action', 'logs.component']);
   }
 
   @Patch(':id')

@@ -12,6 +12,7 @@ import { ActionsModule } from './actions/actions.module';
 import { LogsModule } from './logActions/logs.module';
 import { configValidationSchema } from 'src/config/schema.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -21,8 +22,9 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       validationSchema: configValidationSchema
     }),
     DatabaseModule,
-    UsersModule,
     AuthModule,
+    UsersModule,
+    RolesModule,
     LocationsModule,
     GuessesModule,
     ActionsModule,

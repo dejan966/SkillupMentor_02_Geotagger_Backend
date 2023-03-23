@@ -1,7 +1,8 @@
 import { Exclude } from 'class-transformer';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, UpdateDateColumn, CreateDateColumn } from 'typeorm';
 import { Guess } from './guess.entity';
 import { Log } from './log.entity';
+import { Role } from './role.entity';
 
 @Entity()
 export class User {
@@ -27,9 +28,18 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
+  @ManyToOne(() => Role, (role) => role.users, { onDelete: 'SET NULL' })
+  role:Role;
+
   @Column({ nullable: true, default: null })
   @Exclude()
   refresh_token: string;
+
+  @CreateDateColumn()
+  created_at: string;
+
+  @UpdateDateColumn()
+  updated_at: string;
   
   @OneToMany(() => Guess, (guess) => guess.user)
   guesses: Guess[];

@@ -1,6 +1,6 @@
 import { IsOptional } from 'class-validator';
 
-export class UpdateComponentDto {
+export class UpdateRoleDto{
     @IsOptional()
-    component?:string
+    role:string;
 }

@@ -4,12 +4,12 @@ export class CreateLocationDto {
     @IsOptional()
     name?:string;
 
-    @IsNotEmpty()
-    latitude:number
+    @IsOptional()
+    latitude?:number
+
+    @IsOptional()
+    longitude?:number
 
     @IsNotEmpty()
-    longitude:number
-
-    @IsNotEmpty()
-    image_url:number
+    image_url:string
 }

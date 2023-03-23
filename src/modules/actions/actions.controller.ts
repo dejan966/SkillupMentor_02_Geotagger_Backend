@@ -1,4 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ApiBody } from '@nestjs/swagger';
+import { IsEmpty } from 'class-validator';
+import { IsNull } from 'typeorm';
 import { ActionsService } from './actions.service';
 import { CreateActionDto } from './dto/create-action.dto';
 import { UpdateActionDto } from './dto/update-action.dto';
@@ -14,12 +17,12 @@ export class ActionsController {
 
   @Get()
   async findAll() {
-    return this.actionsService.findAll();
+    return this.actionsService.findAll(['logs']);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.actionsService.findById(id);
+    return this.actionsService.findById(id, ['logs']);
   }
 
   @Patch(':id')

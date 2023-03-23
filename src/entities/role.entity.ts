@@ -1,19 +1,13 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Log } from './log.entity';
+import { User } from './user.entity';
 
 @Entity()
-export class Action{
+export class Role{
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  action: string;
-  
-  @Column()
-  url: string;
-
-  @Column({ nullable: true })
-  new_value: string;
+  role: string;
 
   @CreateDateColumn()
   created_at: string;
@@ -21,6 +15,6 @@ export class Action{
   @UpdateDateColumn()
   updated_at: string;
 
-  @OneToMany(() => Log, (log) => log.action)
-  logs: Log[];
+  @OneToMany(() => User, (user) => user.role)
+  users: User[];
 }

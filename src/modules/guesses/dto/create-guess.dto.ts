@@ -1,14 +1,9 @@
-import { IsNotEmpty } from "class-validator";
-import { Location } from "src/entities/location.entity";
-import { User } from "src/entities/user.entity";
+import { IsOptional } from "class-validator";
 
 export class CreateGuessDto {
-    @IsNotEmpty()
-    value:boolean;
+    @IsOptional()
+    latitude?:number;
 
-    @IsNotEmpty()
-    location:Location
-
-    @IsNotEmpty()
-    user:User
+    @IsOptional()
+    longitude?:number;
 }

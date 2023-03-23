@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Component } from 'src/entities/component.entity';
 import Logging from 'src/library/Logging';
@@ -15,15 +15,15 @@ export class ComponentsService extends AbstractService {
   ){
     super(componentsRepository)
   }
-/*   async create(createComponentDto: {name:string}) {
-    const newComponent = this.componentsRepository.create(createComponentDto);
+  async create(createComponentDto: CreateComponentDto) {
+    const newComponent = this.componentsRepository.create({...createComponentDto});
     return this.componentsRepository.save(newComponent);
-  } */
+  }
 
-  async update(id: number, updateComponentDto: {name:string}) {
+  async update(id: number, updateComponentDto: UpdateComponentDto) {
     const component = await this.findById(id);
     try {
-      component[component] = updateComponentDto.name
+      component.component = updateComponentDto.component
       return this.componentsRepository.save(component);
     } catch (error) {
       Logging.log(error)

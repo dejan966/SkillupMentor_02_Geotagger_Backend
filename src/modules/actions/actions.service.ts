@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Action } from 'src/entities/action.entity';
 import Logging from 'src/library/Logging';
@@ -16,7 +16,7 @@ export class ActionsService extends AbstractService {
     super(actionsRepository)
   }
   async create(createActionDto: CreateActionDto) {
-    const newAction = this.actionsRepository.create(createActionDto);
+    const newAction = this.actionsRepository.create({...createActionDto});
     return this.actionsRepository.save(newAction);
   }
 

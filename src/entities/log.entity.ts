@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Action } from './action.entity';
 import { Component } from './component.entity';
 import { User } from './user.entity';
@@ -16,4 +16,10 @@ export class Log{
 
   @ManyToOne(() => User, (user) => user.logs, { onDelete: 'SET NULL' })
   user: User;
+
+  @CreateDateColumn()
+  created_at: string;
+
+  @UpdateDateColumn()
+  updated_at: string;
 }
