@@ -17,12 +17,12 @@ export class ActionsController {
 
   @Get()
   async findAll() {
-    return this.actionsService.findAll();
+    return this.actionsService.findAll(['logs']);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.actionsService.findById(id);
+    return this.actionsService.findById(id, ['logs']);
   }
 
   @Patch(':id')

@@ -15,7 +15,7 @@ export class LocationsController {
 
   @Get()
   async findAll() {
-    return this.locationsService.findAll();
+    return this.locationsService.findAll(['guesses']);
   }
 
   @Get('picture')
@@ -27,7 +27,7 @@ export class LocationsController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: number) {
-    return this.locationsService.findById(id);
+    return this.locationsService.findById(id, ['guesses']);
   }
 
   @Patch(':id')

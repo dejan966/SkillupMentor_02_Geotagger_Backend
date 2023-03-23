@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Component } from 'src/entities/component.entity';
 import { Log } from 'src/entities/log.entity';
 import { User } from 'src/entities/user.entity';
 import Logging from 'src/library/Logging';
@@ -27,16 +28,15 @@ export class LogsService extends AbstractService {
       action = await this.actionsService.create({...createLogDto.action});
     }
 
+    let component = null
     if(createLogDto.component){
-      let component = await this.componentService.findBy({component:createLogDto.component.component})
+      component = await this.componentService.findBy({component:createLogDto.component.component})
       if(!component){
         component = await this.componentService.create({...createLogDto.component});
       }
-      createLogDto.component = component
     }
-    createLogDto.action = action
-
-    const newLog = await this.logsRepository.create({...createLogDto, user});
+    
+    const newLog = await this.logsRepository.create({action, component, user});
     return this.logsRepository.save(newLog);
   }
 

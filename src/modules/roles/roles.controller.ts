@@ -15,12 +15,12 @@ export class RolesController{
 
   @Get()
   async findAll() {
-    return this.rolesService.findAll();
+    return this.rolesService.findAll(['user']);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.rolesService.findById(id);
+    return this.rolesService.findById(id, ['user']);
   }
 
   @Patch(':id')

@@ -14,12 +14,12 @@ export class ComponentsController {
 
   @Get()
   async findAll() {
-    return this.componentsService.findAll();
+    return this.componentsService.findAll(['logs']);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.componentsService.findById(id);
+    return this.componentsService.findById(id, ['logs']);
   }
 
   @Patch(':id')
