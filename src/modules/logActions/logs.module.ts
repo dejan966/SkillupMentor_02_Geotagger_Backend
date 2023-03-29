@@ -7,18 +7,20 @@ import { ActionsService } from '../actions/actions.service';
 import { ComponentsService } from '../components/components.service';
 import { Action } from 'src/entities/action.entity';
 import { Component } from 'src/entities/component.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Log]), 
     TypeOrmModule.forFeature([Action]), 
-    TypeOrmModule.forFeature([Component])
+    TypeOrmModule.forFeature([Component]),
   ],
   controllers: [LogsController],
   providers: [
     LogsService, 
     ActionsService, 
-    ComponentsService
+    ComponentsService,
+    JwtService
   ]
 })
 export class LogsModule {}

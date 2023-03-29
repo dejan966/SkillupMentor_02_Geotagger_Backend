@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ClassSeri
 import { LogsService } from './logs.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateLogDto } from './dto/create-log.dto';
-import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { User } from 'src/entities/user.entity';
 import { UpdateLogDto } from './dto/update-log.dto';
 
@@ -11,11 +10,11 @@ import { UpdateLogDto } from './dto/update-log.dto';
 export class LogsController {
   constructor(private readonly logsService: LogsService) {}
 
-  @Post()
+/*   @Post()
   @UseGuards(JwtAuthGuard)
   async create(@Body() createLogDto: CreateLogDto, @GetCurrentUser() user:User) {
     return this.logsService.create(createLogDto, user);
-  }
+  } */
 
   @Get()
   async findAll() {

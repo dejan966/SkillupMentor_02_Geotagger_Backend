@@ -1,5 +1,6 @@
 import { IsEmail, IsOptional, Matches, ValidateIf } from 'class-validator';
 import { Match } from 'src/decorators/match.decorator';
+import { Role } from 'src/entities/role.entity';
 
 export class UpdateUserDto {
   @IsOptional()
@@ -11,9 +12,6 @@ export class UpdateUserDto {
   @IsOptional()
   @IsEmail()
   email?: string;
-
-  @IsOptional()
-  refresh_token?: string;
 
   @IsOptional()
   avatar?: string;
@@ -29,4 +27,7 @@ export class UpdateUserDto {
   @IsOptional()
   @Match(UpdateUserDto, (field) => field.password, { message: 'Passwords do not match' })
   confirm_password?: string;
+
+  @IsOptional()
+  role:Role
 }

@@ -7,12 +7,14 @@ import { compareHash, hash } from 'src/utils/bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AbstractService } from '../common/abstract.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService extends AbstractService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private readonly jwtService:JwtService
   ) {
     super(usersRepository)
   }
@@ -29,6 +31,12 @@ export class UsersService extends AbstractService {
       Logging.error(error);
       throw new BadRequestException('Something went wrong while creating a new user.');
     }
+  }
+
+  async getCurrentUser(cookie:string){
+    //secret morm posebi dodat iz nekega rAZLOGA
+    const data = await this.jwtService.verifyAsync(cookie)
+    return this.findById(data['id'])
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {

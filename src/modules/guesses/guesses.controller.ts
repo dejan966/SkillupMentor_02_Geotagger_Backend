@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, UseGuards } from '@nestjs/common';
 import { GuessesService } from './guesses.service';
 import { CreateGuessDto } from './dto/create-guess.dto';
-import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { User } from 'src/entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UpdateGuessDto } from './dto/update-guess.dto';
@@ -10,7 +9,7 @@ import { UpdateGuessDto } from './dto/update-guess.dto';
 export class GuessesController {
   constructor(private readonly guessesService: GuessesService) {}
 
-  @Post('location/:id')
+/*   @Post('location/:id')
   @UseGuards(JwtAuthGuard)
   async create(
     @Body() createGuessDto: CreateGuessDto, 
@@ -18,7 +17,7 @@ export class GuessesController {
     @Param('id') locationId:number
     ) {
     return this.guessesService.create(createGuessDto, user, locationId);
-  }
+  } */
 
   @Get()
   @UseGuards(JwtAuthGuard)

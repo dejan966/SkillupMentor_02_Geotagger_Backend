@@ -2,10 +2,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './modules/app.module';
-
-const express = require('express');
-const path = require('path');
-const cookieparser = require('cookie-parser');
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -16,7 +15,7 @@ async function bootstrap() {
     credentials: true,
   });
   app.useGlobalPipes(new ValidationPipe());
-  app.use(cookieparser());
+  app.use(cookieParser());
   
   const dirname = path.resolve();
   app.use('/uploads', express.static(path.join(dirname, '/uploads')))

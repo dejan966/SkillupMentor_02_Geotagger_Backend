@@ -1,15 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, UseGuards, Req, HttpCode, HttpStatus } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
-import { User } from 'src/entities/user.entity';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { Request } from 'express';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    ) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -17,9 +18,10 @@ export class UsersController {
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
-  async getCurrentUser(@GetCurrentUser() user: User){
-    return user;
+  @HttpCode(HttpStatus.OK)
+  async getCurrentUser(@Req() req: Request){
+    const cookie = req.cookies['access_token']
+    return this.usersService.getCurrentUser(cookie);
   }
 
   @Get()

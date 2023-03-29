@@ -9,61 +9,50 @@ import {
   Res, 
   Req, 
   UseGuards, 
-  Get 
+  Get
 } from '@nestjs/common';
 import { Public } from 'src/decorators/public.decorator';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { User } from 'src/entities/user.entity';
 import { RequestWithUser } from 'src/interfaces/auth.interface';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';
-import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
-import { UserData } from 'src/interfaces/user.interface';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { NotAuthGuard } from './guards/not-auth.guard';
 import { ApiBody } from '@nestjs/swagger';
+import { JwtService } from '@nestjs/jwt';
+import { UsersService } from '../users/users.service';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+    private readonly usersService: UsersService,
+    ) {}
 
   @Public()
   @Post('signup')
-  @UseGuards(NotAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() body: RegisterUserDto): Promise<User> {
     return this.authService.register(body);
   }
 
   @Public()
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(LocalAuthGuard, NotAuthGuard)
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        email: {
-          type: 'string',
-          example: 'test@gmail.com',
-        },
-        password: {
-          type: 'string',
-          example: 'Slenderman1234!',
-        },
-      },
-    },
-  })
-  async login(@Req() req: RequestWithUser, @Res() res: Response): Promise<void> {
-    return this.authService.login(req.user, res);
+  async login(@Req() req: RequestWithUser, @Res({ passthrough: true }) res: Response): Promise<User> {
+    const access_token = await this.authService.generateJwt(req.user)
+    res.cookie('access_token', access_token, { httpOnly:true })
+    return req.user
   }
 
   @Post('signout')
-  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async signout(@GetCurrentUser() userData: User, @Res() res: Response): Promise<void> {
-    return this.authService.signout(userData.id, res);
+  async signout(@Res({passthrough:true}) res: Response) {
+    res.clearCookie('access_token')
+    return {msg:'ok'}
   }
 }

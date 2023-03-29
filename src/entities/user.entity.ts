@@ -31,10 +31,6 @@ export class User {
   @ManyToOne(() => Role, (role) => role.users, { onDelete: 'SET NULL' })
   role:Role;
 
-  @Column({ nullable: true, default: null })
-  @Exclude()
-  refresh_token: string;
-
   @CreateDateColumn()
   created_at: string;
 
