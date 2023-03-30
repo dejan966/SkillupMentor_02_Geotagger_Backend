@@ -7,7 +7,6 @@ import { ActionsService } from '../actions/actions.service';
 import { ComponentsService } from '../components/components.service';
 import { Action } from 'entities/action.entity';
 import { Component } from 'entities/component.entity';
-import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -20,7 +19,6 @@ import { JwtService } from '@nestjs/jwt';
     LogsService, 
     ActionsService, 
     ComponentsService,
-    JwtService
   ]
 })
 export class LogsModule {}

@@ -1,5 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
-import { LogsService } from './logs.service';
+import { 
+  Controller, 
+  Post, 
+  Body, 
+  UseInterceptors, 
+  ClassSerializerInterceptor, 
+  UseGuards,
+  Delete,
+  Get,
+  Param,
+  Patch,
+} from '@nestjs/common';import { LogsService } from './logs.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateLogDto } from './dto/create-log.dto';
 import { User } from 'entities/user.entity';

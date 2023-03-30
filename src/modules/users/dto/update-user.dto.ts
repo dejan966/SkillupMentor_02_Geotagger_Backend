@@ -1,6 +1,6 @@
 import { IsEmail, IsOptional, Matches, ValidateIf } from 'class-validator';
-import { Match } from 'src/decorators/match.decorator';
-import { Role } from 'src/entities/role.entity';
+import { Match } from 'decorators/match.decorator';
+import { Role } from 'entities/role.entity';
 
 export class UpdateUserDto {
   @IsOptional()

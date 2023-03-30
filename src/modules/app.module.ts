@@ -15,6 +15,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { RolesModule } from './roles/roles.module';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
+import { UtilsModule } from './utils/utils.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { JwtAuthGuard } from './auth/guards/jwt.guard';
       validationSchema: configValidationSchema
     }),
     DatabaseModule,
+    UtilsModule,
     AuthModule,
     UsersModule,
     RolesModule,
@@ -36,15 +38,10 @@ import { JwtAuthGuard } from './auth/guards/jwt.guard';
   controllers: [AppController],
   providers: [
     {
-      provide: APP_INTERCEPTOR, 
+      provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor
     },
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard
-    },
-    AppService,
-    JwtService
+    AppService, 
   ],
 })
 export class AppModule {

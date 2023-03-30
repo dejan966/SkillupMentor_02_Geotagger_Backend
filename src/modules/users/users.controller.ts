@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Request } from 'express';
+import { JwtAuthGuard } from 'modules/auth/guards/jwt.guard';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -17,6 +18,7 @@ export class UsersController {
   }
 
   @Get('me')
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async getCurrentUser(@Req() req: Request){
     const cookie = req.cookies['access_token']

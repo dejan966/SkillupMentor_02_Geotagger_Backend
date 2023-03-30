@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Guess } from 'entities/guess.entity';
 import { LocationsService } from '../locations/locations.service';
 import { Location } from 'entities/location.entity';
-import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -16,7 +15,6 @@ import { JwtService } from '@nestjs/jwt';
   providers: [
     GuessesService, 
     LocationsService,
-    JwtService
   ],
 })
 export class GuessesModule {}

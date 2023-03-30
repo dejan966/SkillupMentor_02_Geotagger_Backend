@@ -8,28 +8,21 @@ import {
   HttpStatus, 
   Res, 
   Req, 
-  UseGuards, 
-  Get
+  UseGuards,
 } from '@nestjs/common';
 import { Public } from 'decorators/public.decorator';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { User } from 'entities/user.entity';
 import { RequestWithUser } from 'interfaces/auth.interface';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
-import { JwtAuthGuard } from './guards/jwt.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { ApiBody } from '@nestjs/swagger';
-import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly jwtService: JwtService,
-    private readonly usersService: UsersService,
     ) {}
 
   @Public()

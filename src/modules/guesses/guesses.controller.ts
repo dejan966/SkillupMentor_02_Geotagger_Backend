@@ -1,5 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, UseGuards } from '@nestjs/common';
-import { GuessesService } from './guesses.service';
+import { 
+  Controller, 
+  Post, 
+  Body, 
+  UseGuards,
+  Delete,
+  Get,
+  Param,
+  Patch,
+} from '@nestjs/common';import { GuessesService } from './guesses.service';
 import { CreateGuessDto } from './dto/create-guess.dto';
 import { User } from 'entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';

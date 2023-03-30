@@ -34,7 +34,6 @@ export class UsersService extends AbstractService {
   }
 
   async getCurrentUser(cookie:string){
-    //secret morm posebi dodat iz nekega rAZLOGA
     const data = await this.jwtService.verifyAsync(cookie)
     return this.findById(data['id'])
   }
