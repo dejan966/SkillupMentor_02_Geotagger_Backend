@@ -10,11 +10,10 @@ import { GuessesModule } from './guesses/guesses.module';
 import { ComponentsModule } from './components/components.module';
 import { ActionsModule } from './actions/actions.module';
 import { LogsModule } from './logActions/logs.module';
-import { configValidationSchema } from 'src/config/schema.config';
+import { configValidationSchema } from 'config/schema.config';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { RolesModule } from './roles/roles.module';
 import { JwtService } from '@nestjs/jwt';
-import { LoggerMiddleware } from 'src/middleware/logger.middleware';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
 
 @Module({

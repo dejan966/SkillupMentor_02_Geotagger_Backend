@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Action } from 'src/entities/action.entity';
-import Logging from 'src/library/Logging';
+import { Action } from 'entities/action.entity';
+import Logging from 'library/Logging';
 import { Repository } from 'typeorm';
 import { AbstractService } from '../common/abstract.service';
 import { CreateActionDto } from './dto/create-action.dto';

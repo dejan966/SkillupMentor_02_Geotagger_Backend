@@ -10,15 +10,20 @@ import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
   imports: [
-    UsersModule,
-    PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET'),
+        secret: '5a8b76f64965d28558d0a4bbbac949fc2a732bccb6fd36b7318d6a4e08776052',
+        signOptions: {expiresIn: '900s'}
       }),
     }),
+    PassportModule.register({
+      defaultStrategy:'jwt',
+      session:true
+    }),
+    UsersModule,
+    
   ],
   controllers: [AuthController],
   providers: [

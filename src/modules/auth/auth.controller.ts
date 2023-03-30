@@ -11,10 +11,10 @@ import {
   UseGuards, 
   Get
 } from '@nestjs/common';
-import { Public } from 'src/decorators/public.decorator';
+import { Public } from 'decorators/public.decorator';
 import { Response, Request } from 'express';
-import { User } from 'src/entities/user.entity';
-import { RequestWithUser } from 'src/interfaces/auth.interface';
+import { User } from 'entities/user.entity';
+import { RequestWithUser } from 'interfaces/auth.interface';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';

@@ -1,7 +1,7 @@
 
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
-import { PaginatedResult } from 'src/interfaces/paginated-result.interface'
-import Logging from 'src/library/Logging'
+import { PaginatedResult } from 'interfaces/paginated-result.interface'
+import Logging from 'library/Logging'
 import { Repository } from 'typeorm'
 
 @Injectable()

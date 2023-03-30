@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ClassSeri
 import { LogsService } from './logs.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateLogDto } from './dto/create-log.dto';
-import { User } from 'src/entities/user.entity';
+import { User } from 'entities/user.entity';
 import { UpdateLogDto } from './dto/update-log.dto';
 
 @Controller('logs')

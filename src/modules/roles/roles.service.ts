@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Log } from 'src/entities/log.entity';
-import { Role } from 'src/entities/role.entity';
-import { User } from 'src/entities/user.entity';
-import Logging from 'src/library/Logging';
+import { Log } from 'entities/log.entity';
+import { Role } from 'entities/role.entity';
+import { User } from 'entities/user.entity';
+import Logging from 'library/Logging';
 import { Repository } from 'typeorm';
 import { ActionsService } from '../actions/actions.service';
 import { AbstractService } from '../common/abstract.service';

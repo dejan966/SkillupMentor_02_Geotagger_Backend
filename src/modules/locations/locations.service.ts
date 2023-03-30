@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Location } from 'src/entities/location.entity';
-import Logging from 'src/library/Logging';
+import { Location } from 'entities/location.entity';
+import Logging from 'library/Logging';
 import { Repository } from 'typeorm';
 import { AbstractService } from '../common/abstract.service';
 import { CreateLocationDto } from './dto/create-location.dto';

@@ -3,7 +3,6 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Request } from 'express';
-import { Public } from 'src/decorators/public.decorator';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
