@@ -14,17 +14,18 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateLogDto } from './dto/create-log.dto';
 import { User } from 'entities/user.entity';
 import { UpdateLogDto } from './dto/update-log.dto';
+import { GetCurrentUser } from 'decorators/get-current-user.decorator';
 
 @Controller('logs')
 @UseInterceptors(ClassSerializerInterceptor)
 export class LogsController {
   constructor(private readonly logsService: LogsService) {}
 
-/*   @Post()
+  @Post()
   @UseGuards(JwtAuthGuard)
   async create(@Body() createLogDto: CreateLogDto, @GetCurrentUser() user:User) {
     return this.logsService.create(createLogDto, user);
-  } */
+  }
 
   @Get()
   async findAll() {

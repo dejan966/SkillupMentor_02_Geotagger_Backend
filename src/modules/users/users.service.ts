@@ -33,11 +33,6 @@ export class UsersService extends AbstractService {
     }
   }
 
-  async getCurrentUser(cookie:string){
-    const data = await this.jwtService.verifyAsync(cookie)
-    return this.findById(data['id'])
-  }
-
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const {avatar, password, confirm_password,...rest} = updateUserDto
     const user = await this.findById(id);

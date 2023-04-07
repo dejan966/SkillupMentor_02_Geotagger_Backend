@@ -12,12 +12,13 @@ import { CreateGuessDto } from './dto/create-guess.dto';
 import { User } from 'entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UpdateGuessDto } from './dto/update-guess.dto';
+import { GetCurrentUser } from 'decorators/get-current-user.decorator';
 
 @Controller('guesses')
 export class GuessesController {
   constructor(private readonly guessesService: GuessesService) {}
 
-/*   @Post('location/:id')
+  @Post('location/:id')
   @UseGuards(JwtAuthGuard)
   async create(
     @Body() createGuessDto: CreateGuessDto, 
@@ -25,7 +26,7 @@ export class GuessesController {
     @Param('id') locationId:number
     ) {
     return this.guessesService.create(createGuessDto, user, locationId);
-  } */
+  }
 
   @Get()
   @UseGuards(JwtAuthGuard)
