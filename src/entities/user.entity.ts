@@ -22,7 +22,7 @@ export class User {
   @Exclude()
   password: string;
 
-  @Column({ default: 'Blank-Avatar.png' })
+  @Column({ default: 'default_profile.png' })
   avatar: string;
 
   @Column({ default: true })
