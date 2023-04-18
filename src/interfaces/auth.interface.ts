@@ -12,5 +12,5 @@ export interface RequestWithUser extends Request {
 }
 
 export enum JwtType {
-  ACCESS_TOKEN = 'ACCESS_TOKEN'
+  ACCESS_TOKEN = 'ACCESS_TOKEN',
 }

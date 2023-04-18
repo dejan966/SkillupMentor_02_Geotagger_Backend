@@ -1,13 +1,14 @@
-import { 
-  Controller, 
-  Post, 
-  Body, 
+import {
+  Controller,
+  Post,
+  Body,
   UseGuards,
   Delete,
   Get,
   Param,
   Patch,
-} from '@nestjs/common';import { GuessesService } from './guesses.service';
+} from '@nestjs/common';
+import { GuessesService } from './guesses.service';
 import { CreateGuessDto } from './dto/create-guess.dto';
 import { User } from 'entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -21,10 +22,10 @@ export class GuessesController {
   @Post('location/:id')
   @UseGuards(JwtAuthGuard)
   async create(
-    @Body() createGuessDto: CreateGuessDto, 
+    @Body() createGuessDto: CreateGuessDto,
     @GetCurrentUser() user: User,
-    @Param('id') locationId:number
-    ) {
+    @Param('id') locationId: number,
+  ) {
     return this.guessesService.create(createGuessDto, user, locationId);
   }
 
@@ -39,10 +40,13 @@ export class GuessesController {
   async findOne(@Param('id') id: number) {
     return this.guessesService.findById(id, ['location', 'user']);
   }
-  
+
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  async update(@Param('id') id: number, @Body() updateGuessDto:UpdateGuessDto) {
+  async update(
+    @Param('id') id: number,
+    @Body() updateGuessDto: UpdateGuessDto,
+  ) {
     return this.guessesService.update(id, updateGuessDto);
   }
 

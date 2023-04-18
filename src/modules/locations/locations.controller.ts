@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -21,8 +30,8 @@ export class LocationsController {
 
   @Get('picture')
   @UseGuards(JwtAuthGuard)
-  async findByPicture(pic: string){
-    return this.locationsService.findBy(pic)
+  async findByPicture(pic: string) {
+    return this.locationsService.findBy(pic);
   }
 
   @Get(':id')
@@ -32,7 +41,10 @@ export class LocationsController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateLocationDto: UpdateLocationDto) {
+  async update(
+    @Param('id') id: number,
+    @Body() updateLocationDto: UpdateLocationDto,
+  ) {
     return this.locationsService.update(id, updateLocationDto);
   }
 

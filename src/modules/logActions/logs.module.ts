@@ -10,15 +10,11 @@ import { Component } from 'entities/component.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Log]), 
-    TypeOrmModule.forFeature([Action]), 
+    TypeOrmModule.forFeature([Log]),
+    TypeOrmModule.forFeature([Action]),
     TypeOrmModule.forFeature([Component]),
   ],
   controllers: [LogsController],
-  providers: [
-    LogsService, 
-    ActionsService, 
-    ComponentsService,
-  ]
+  providers: [LogsService, ActionsService, ComponentsService],
 })
 export class LogsModule {}

@@ -5,7 +5,9 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 type ConfigType = TypeOrmModuleOptions & PostgresConnectionOptions;
 type ConnectionOptions = ConfigType;
 
-export const ORMConfig = async (configService: ConfigService): Promise<ConnectionOptions> => ({
+export const ORMConfig = async (
+  configService: ConfigService,
+): Promise<ConnectionOptions> => ({
   type: 'postgres',
   host: configService.get('DATABASE_HOST'),
   username: configService.get('DATABASE_USERNAME'),

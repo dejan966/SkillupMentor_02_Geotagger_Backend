@@ -1,4 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, UseGuards, Req, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ClassSerializerInterceptor,
+  UseInterceptors,
+  UseGuards,
+  Req,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -10,9 +24,7 @@ import { User } from 'entities/user.entity';
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -22,18 +34,22 @@ export class UsersController {
   @Get('me')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async getCurrentUser(@GetCurrentUser() user: User){
-    return user
+  async getCurrentUser(@GetCurrentUser() user: User) {
+    return user;
   }
 
   @Get()
-  async findAll(){
+  async findAll() {
     return this.usersService.findAll(['role', 'logs.action', 'logs.component']);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.usersService.findById(id, ['role', 'logs.action', 'logs.component']);
+    return this.usersService.findById(id, [
+      'role',
+      'logs.action',
+      'logs.component',
+    ]);
   }
 
   @Patch(':id')

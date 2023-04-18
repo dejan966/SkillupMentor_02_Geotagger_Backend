@@ -1,11 +1,11 @@
-import { IsOptional } from "class-validator";
-import { Action } from "entities/action.entity";
-import { Component } from "entities/component.entity";
+import { IsOptional } from 'class-validator';
+import { Action } from 'entities/action.entity';
+import { Component } from 'entities/component.entity';
 
 export class UpdateLogDto {
-    @IsOptional()
-    action?:Action;
+  @IsOptional()
+  action?: Action;
 
-    @IsOptional()
-    component?:Component;
+  @IsOptional()
+  component?: Component;
 }

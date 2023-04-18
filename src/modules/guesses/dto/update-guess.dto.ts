@@ -1,12 +1,12 @@
-import { IsOptional } from "class-validator";
+import { IsOptional } from 'class-validator';
 
 export class UpdateGuessDto {
-    @IsOptional()
-    latitude?:string
-    
-    @IsOptional()
-    longitude?:string
+  @IsOptional()
+  latitude?: string;
 
-    @IsOptional()
-    value?:boolean
+  @IsOptional()
+  longitude?: string;
+
+  @IsOptional()
+  value?: boolean;
 }

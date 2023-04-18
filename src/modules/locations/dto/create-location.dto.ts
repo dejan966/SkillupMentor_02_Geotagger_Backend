@@ -1,15 +1,15 @@
-import { IsNotEmpty, IsOptional } from "class-validator";
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateLocationDto {
-    @IsOptional()
-    name?:string;
+  @IsOptional()
+  name?: string;
 
-    @IsOptional()
-    latitude?:number
+  @IsOptional()
+  latitude?: number;
 
-    @IsOptional()
-    longitude?:number
+  @IsOptional()
+  longitude?: number;
 
-    @IsNotEmpty()
-    image_url:string
+  @IsNotEmpty()
+  image_url: string;
 }

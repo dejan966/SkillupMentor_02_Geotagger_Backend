@@ -16,11 +16,15 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
-  
-  const dirname = path.resolve();
-  app.use('/uploads', express.static(path.join(dirname, '/uploads')))
 
-  const config = new DocumentBuilder().setTitle('Geotagger').setDescription('This is the Geotagger app').setVersion('1.0.0').build();
+  const dirname = path.resolve();
+  app.use('/uploads', express.static(path.join(dirname, '/uploads')));
+
+  const config = new DocumentBuilder()
+    .setTitle('Geotagger')
+    .setDescription('This is the Geotagger app')
+    .setVersion('1.0.0')
+    .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);

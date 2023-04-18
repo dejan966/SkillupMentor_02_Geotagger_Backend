@@ -1,4 +1,9 @@
-import { ClassSerializerInterceptor, MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  MiddlewareConsumer,
+  Module,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,18 +16,16 @@ import { ComponentsModule } from './components/components.module';
 import { ActionsModule } from './actions/actions.module';
 import { LogsModule } from './logActions/logs.module';
 import { configValidationSchema } from 'config/schema.config';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { RolesModule } from './roles/roles.module';
-import { JwtService } from '@nestjs/jwt';
-import { JwtAuthGuard } from './auth/guards/jwt.guard';
 import { UtilsModule } from './utils/utils.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env'],
-      validationSchema: configValidationSchema
+      envFilePath: [`.env.${process.env.STAGE}`],
+      validationSchema: configValidationSchema,
     }),
     DatabaseModule,
     UtilsModule,
@@ -39,13 +42,13 @@ import { UtilsModule } from './utils/utils.module';
   providers: [
     {
       provide: APP_INTERCEPTOR,
-      useClass: ClassSerializerInterceptor
+      useClass: ClassSerializerInterceptor,
     },
-    AppService, 
+    AppService,
   ],
 })
 export class AppModule {
-/*   configure(consumer: MiddlewareConsumer) {
+  /*   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })
   } */
 }

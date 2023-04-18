@@ -7,31 +7,35 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(private reflector: Reflector, private jwtService:JwtService) {
+  constructor(private reflector: Reflector, private jwtService: JwtService) {
     super();
   }
 
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-    const isPublic = this.reflector.getAllAndOverride('isPublic', [context.getHandler(), context.getClass()]);
-    const request = context.switchToHttp().getRequest()
-    
-    if (isPublic) return true
-    
-    try{
-      const access_token = request.cookies['access_token']
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    const isPublic = this.reflector.getAllAndOverride('isPublic', [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    const request = context.switchToHttp().getRequest();
 
-      if(!access_token || !!!this.jwtService.verify(access_token))
-      {
-        return false
+    if (isPublic) return true;
+
+    try {
+      const access_token = request.cookies['access_token'];
+
+      if (!access_token || !!!this.jwtService.verify(access_token)) {
+        return false;
       }
-      
-      return super.canActivate(context)
-    } catch(error){
-      Logging.error(error)
-      return false
+
+      return super.canActivate(context);
+    } catch (error) {
+      Logging.error(error);
+      return false;
     }
   }
-/*   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  /*   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const isPublic = this.reflector.getAllAndOverride('isPublic', [context.getHandler(), context.getClass()])
     const request = context.switchToHttp().getRequest()
 

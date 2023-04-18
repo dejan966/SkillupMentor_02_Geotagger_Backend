@@ -14,19 +14,25 @@ import { UpdateGuessDto } from './dto/update-guess.dto';
 export class GuessesService extends AbstractService {
   constructor(
     @InjectRepository(Guess)
-    private readonly guessesRepository:Repository<Guess>,
-    private readonly locationsService:LocationsService
-  ){
-    super(guessesRepository)
+    private readonly guessesRepository: Repository<Guess>,
+    private readonly locationsService: LocationsService,
+  ) {
+    super(guessesRepository);
   }
 
-  async create(createGuessDto: CreateGuessDto, user:User, locationId:number) {
-    const location = await this.locationsService.findById(locationId) as unknown as Location
-    const newGuess = await this.guessesRepository.create({...createGuessDto, location, user});
+  async create(createGuessDto: CreateGuessDto, user: User, locationId: number) {
+    const location = (await this.locationsService.findById(
+      locationId,
+    )) as unknown as Location;
+    const newGuess = await this.guessesRepository.create({
+      ...createGuessDto,
+      location,
+      user,
+    });
     return this.guessesRepository.save(newGuess);
   }
 
-  async update(id:number, updateGuessDto: UpdateGuessDto){
+  async update(id: number, updateGuessDto: UpdateGuessDto) {
     const guess = await this.findById(id);
     try {
       for (const key in guess) {
@@ -34,8 +40,10 @@ export class GuessesService extends AbstractService {
       }
       return this.guessesRepository.save(guess);
     } catch (error) {
-      Logging.log(error)
-      throw new NotFoundException('Something went wrong while updating the data.');
+      Logging.log(error);
+      throw new NotFoundException(
+        'Something went wrong while updating the data.',
+      );
     }
   }
 }

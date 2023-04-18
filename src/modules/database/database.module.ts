@@ -8,7 +8,8 @@ import { ORMConfig } from 'config/orm.config';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ORMConfig(configService),
+      useFactory: async (configService: ConfigService) =>
+        ORMConfig(configService),
     }),
   ],
 })

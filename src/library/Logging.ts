@@ -1,4 +1,4 @@
-const chalk = require("chalk");
+const chalk = require('chalk');
 
 export default class Logging {
   public static log = (args: any) => this.info(args);
@@ -7,9 +7,9 @@ export default class Logging {
     console.log(
       chalk.blue(
         `[${new Date().toLocaleString()}] [INFO]`,
-        typeof args === 'string' ? chalk.blueBright(args) : args
+        typeof args === 'string' ? chalk.blueBright(args) : args,
       ),
-    ); 
+    );
 
   public static warn = (args: any) =>
     console.log(
@@ -23,7 +23,7 @@ export default class Logging {
     console.log(
       chalk.red(
         `[${new Date().toLocaleString()}] [INFO]`,
-        typeof args === 'string' ? chalk.redBright(args) : args
+        typeof args === 'string' ? chalk.redBright(args) : args,
       ),
     );
 }

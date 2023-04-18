@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Component } from 'entities/component.entity';
 import Logging from 'library/Logging';
@@ -11,23 +15,27 @@ import { UpdateComponentDto } from './dto/update-component.dto';
 export class ComponentsService extends AbstractService {
   constructor(
     @InjectRepository(Component)
-    private readonly componentsRepository:Repository<Component>
-  ){
-    super(componentsRepository)
+    private readonly componentsRepository: Repository<Component>,
+  ) {
+    super(componentsRepository);
   }
   async create(createComponentDto: CreateComponentDto) {
-    const newComponent = this.componentsRepository.create({...createComponentDto});
+    const newComponent = this.componentsRepository.create({
+      ...createComponentDto,
+    });
     return this.componentsRepository.save(newComponent);
   }
 
   async update(id: number, updateComponentDto: UpdateComponentDto) {
     const component = await this.findById(id);
     try {
-      component.component = updateComponentDto.component
+      component.component = updateComponentDto.component;
       return this.componentsRepository.save(component);
     } catch (error) {
-      Logging.log(error)
-      throw new NotFoundException('Something went wrong while updating the data.');
+      Logging.log(error);
+      throw new NotFoundException(
+        'Something went wrong while updating the data.',
+      );
     }
   }
 }

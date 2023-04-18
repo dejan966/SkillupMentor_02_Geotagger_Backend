@@ -1,15 +1,16 @@
-import { 
-  Controller, 
-  Post, 
-  Body, 
-  UseInterceptors, 
-  ClassSerializerInterceptor, 
+import {
+  Controller,
+  Post,
+  Body,
+  UseInterceptors,
+  ClassSerializerInterceptor,
   UseGuards,
   Delete,
   Get,
   Param,
   Patch,
-} from '@nestjs/common';import { LogsService } from './logs.service';
+} from '@nestjs/common';
+import { LogsService } from './logs.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateLogDto } from './dto/create-log.dto';
 import { User } from 'entities/user.entity';
@@ -23,7 +24,10 @@ export class LogsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async create(@Body() createLogDto: CreateLogDto, @GetCurrentUser() user:User) {
+  async create(
+    @Body() createLogDto: CreateLogDto,
+    @GetCurrentUser() user: User,
+  ) {
     return this.logsService.create(createLogDto, user);
   }
 
@@ -40,7 +44,7 @@ export class LogsController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  async update(@Param('id') id:number, @Body() updateLogDto: UpdateLogDto) {
+  async update(@Param('id') id: number, @Body() updateLogDto: UpdateLogDto) {
     return this.logsService.update(id, updateLogDto);
   }
 

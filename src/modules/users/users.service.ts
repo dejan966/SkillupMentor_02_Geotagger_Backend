@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
 import Logging from 'library/Logging';
@@ -14,9 +19,9 @@ export class UsersService extends AbstractService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-    private readonly jwtService:JwtService
+    private readonly jwtService: JwtService,
   ) {
-    super(usersRepository)
+    super(usersRepository);
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -29,12 +34,14 @@ export class UsersService extends AbstractService {
       return this.usersRepository.save(newUser);
     } catch (error) {
       Logging.error(error);
-      throw new BadRequestException('Something went wrong while creating a new user.');
+      throw new BadRequestException(
+        'Something went wrong while creating a new user.',
+      );
     }
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const {avatar, password, confirm_password,...rest} = updateUserDto
+    const { avatar, password, confirm_password, ...rest } = updateUserDto;
     const user = await this.findById(id);
     try {
       for (const key in user) {
@@ -42,23 +49,37 @@ export class UsersService extends AbstractService {
       }
       return this.usersRepository.save(user);
     } catch (error) {
-      Logging.log(error)
-      throw new NotFoundException('Something went wrong while updating the data.');
+      Logging.log(error);
+      throw new NotFoundException(
+        'Something went wrong while updating the data.',
+      );
     }
   }
 
-  async updatePassword(user: User, updateUserDto: {current_password: string, password:string, confirm_password:string}): Promise<User> {
+  async updatePassword(
+    user: User,
+    updateUserDto: {
+      current_password: string;
+      password: string;
+      confirm_password: string;
+    },
+  ): Promise<User> {
     if (updateUserDto.password && updateUserDto.confirm_password) {
-      if(!await compareHash(updateUserDto.current_password, user.password)) throw new BadRequestException('Incorrect current password')
-      if (updateUserDto.password !== updateUserDto.confirm_password) throw new BadRequestException('Passwords do not match.')
-      if (await compareHash(updateUserDto.password, user.password)) throw new BadRequestException('New password cannot be the same as old password.')
+      if (!(await compareHash(updateUserDto.current_password, user.password)))
+        throw new BadRequestException('Incorrect current password');
+      if (updateUserDto.password !== updateUserDto.confirm_password)
+        throw new BadRequestException('Passwords do not match.');
+      if (await compareHash(updateUserDto.password, user.password))
+        throw new BadRequestException(
+          'New password cannot be the same as old password.',
+        );
       user.password = await hash(updateUserDto.password);
     }
     return this.usersRepository.save(user);
   }
 
-  async updateUserImageId(id:number, avatar:string): Promise<User> {
-    const user = await this.findById(id)
+  async updateUserImageId(id: number, avatar: string): Promise<User> {
+    const user = await this.findById(id);
     if (avatar === user.avatar) {
       throw new BadRequestException('Avatars have to be different.');
     }

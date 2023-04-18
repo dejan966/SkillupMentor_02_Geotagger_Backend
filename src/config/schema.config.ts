@@ -1,7 +1,7 @@
-import * as Joi from '@hapi/joi';
+import Joi from '@hapi/joi';
 
 export const configValidationSchema = Joi.object({
-  STAGE: 'Development',
+  STAGE: Joi.string().required(),
   DATABASE_HOST: Joi.string().required(),
   DATABASE_PORT: Joi.string().default(5432).required(),
   DATABASE_USERNAME: Joi.string().required(),
@@ -9,6 +9,6 @@ export const configValidationSchema = Joi.object({
   DATABASE_NAME: Joi.string().required(),
   JWT_SECRET: Joi.string().required(),
   JWT_SECRET_EXPIRES: Joi.number().required(),
-/*   JWT_REFRESH_SECRET: Joi.string().required(),
+  /*   JWT_REFRESH_SECRET: Joi.string().required(),
   JWT_REFRESH_SECRET_EXPIRES: Joi.number().required(), */
 });

@@ -1,9 +1,9 @@
-import { IsOptional } from "class-validator";
+import { IsOptional } from 'class-validator';
 
 export class CreateGuessDto {
-    @IsOptional()
-    latitude?:number;
+  @IsOptional()
+  latitude?: number;
 
-    @IsOptional()
-    longitude?:number;
+  @IsOptional()
+  longitude?: number;
 }

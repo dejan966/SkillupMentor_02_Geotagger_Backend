@@ -11,13 +11,15 @@ import { UpdateLocationDto } from './dto/update-location.dto';
 export class LocationsService extends AbstractService {
   constructor(
     @InjectRepository(Location)
-    private readonly locationsRepository: Repository<Location>
-  ){
-    super(locationsRepository)
+    private readonly locationsRepository: Repository<Location>,
+  ) {
+    super(locationsRepository);
   }
 
   async create(createLocationDto: CreateLocationDto) {
-    const newLocation = this.locationsRepository.create({...createLocationDto});
+    const newLocation = this.locationsRepository.create({
+      ...createLocationDto,
+    });
     return this.locationsRepository.save(newLocation);
   }
 
@@ -25,12 +27,15 @@ export class LocationsService extends AbstractService {
     const location = await this.findById(id);
     try {
       for (const key in location) {
-        if (updateLocationDto[key] !== undefined) location[key] = updateLocationDto[key];
+        if (updateLocationDto[key] !== undefined)
+          location[key] = updateLocationDto[key];
       }
       return this.locationsRepository.save(location);
     } catch (error) {
-      Logging.log(error)
-      throw new NotFoundException('Something went wrong while updating the data.');
+      Logging.log(error);
+      throw new NotFoundException(
+        'Something went wrong while updating the data.',
+      );
     }
   }
 }

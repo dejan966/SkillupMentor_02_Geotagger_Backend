@@ -1,22 +1,23 @@
-import { 
-  Controller, 
-  Post, 
-  Body, 
-  UseInterceptors, 
+import {
+  Controller,
+  Post,
+  Body,
+  UseInterceptors,
   ClassSerializerInterceptor,
   UseGuards,
   Delete,
   Get,
   Param,
   Patch,
-} from '@nestjs/common';import { RolesService } from './roles.service';
+} from '@nestjs/common';
+import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { JwtAuthGuard } from 'modules/auth/guards/jwt.guard';
 
 @Controller('roles')
 @UseInterceptors(ClassSerializerInterceptor)
-export class RolesController{
+export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @Post()

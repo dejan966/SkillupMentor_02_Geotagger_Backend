@@ -1,4 +1,7 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Action } from 'entities/action.entity';
 import Logging from 'library/Logging';
@@ -11,12 +14,12 @@ import { UpdateActionDto } from './dto/update-action.dto';
 export class ActionsService extends AbstractService {
   constructor(
     @InjectRepository(Action)
-    private readonly actionsRepository:Repository<Action>
-  ){
-    super(actionsRepository)
+    private readonly actionsRepository: Repository<Action>,
+  ) {
+    super(actionsRepository);
   }
   async create(createActionDto: CreateActionDto) {
-    const newAction = this.actionsRepository.create({...createActionDto});
+    const newAction = this.actionsRepository.create({ ...createActionDto });
     return this.actionsRepository.save(newAction);
   }
 
@@ -28,8 +31,10 @@ export class ActionsService extends AbstractService {
       }
       return this.actionsRepository.save(action);
     } catch (error) {
-      Logging.log(error)
-      throw new NotFoundException('Something went wrong while updating the data.');
+      Logging.log(error);
+      throw new NotFoundException(
+        'Something went wrong while updating the data.',
+      );
     }
   }
 }

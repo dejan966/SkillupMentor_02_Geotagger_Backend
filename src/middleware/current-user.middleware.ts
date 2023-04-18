@@ -5,7 +5,10 @@ import { UsersService } from 'modules/users/users.service';
 
 @Injectable()
 export class CurrentUserMiddleware implements NestMiddleware {
-  constructor(private readonly jwtService: JwtService, private readonly userService: UsersService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly userService: UsersService,
+  ) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
     const { access_token } = req.cookies;

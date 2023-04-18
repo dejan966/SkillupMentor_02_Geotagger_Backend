@@ -4,16 +4,16 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 
 @Global()
 @Module({
-    imports:[
-        JwtModule.registerAsync({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (configService: ConfigService) => ({
-                secret: configService.get('JWT_SECRET'),
-            }),
-        }),
-    ],
-    providers: [JwtService],
-    exports:[JwtModule]
+  imports: [
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
+      }),
+    }),
+  ],
+  providers: [JwtService],
+  exports: [JwtModule],
 })
 export class UtilsModule {}

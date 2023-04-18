@@ -8,13 +8,10 @@ import { Location } from 'entities/location.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Guess]), 
+    TypeOrmModule.forFeature([Guess]),
     TypeOrmModule.forFeature([Location]),
   ],
   controllers: [GuessesController],
-  providers: [
-    GuessesService, 
-    LocationsService,
-  ],
+  providers: [GuessesService, LocationsService],
 })
 export class GuessesModule {}

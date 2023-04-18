@@ -1,14 +1,21 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Log } from './log.entity';
 
 @Entity()
-export class Action{
+export class Action {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   action: string;
-  
+
   @Column()
   url: string;
 

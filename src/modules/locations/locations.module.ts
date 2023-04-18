@@ -9,6 +9,6 @@ import { JwtService } from '@nestjs/jwt';
   imports: [TypeOrmModule.forFeature([Location])],
   controllers: [LocationsController],
   providers: [LocationsService, JwtService],
-  exports:[LocationsService]
+  exports: [LocationsService],
 })
 export class LocationsModule {}

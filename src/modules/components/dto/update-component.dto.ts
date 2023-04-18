@@ -1,6 +1,6 @@
 import { IsOptional } from 'class-validator';
 
 export class UpdateComponentDto {
-    @IsOptional()
-    component?:string
+  @IsOptional()
+  component?: string;
 }
