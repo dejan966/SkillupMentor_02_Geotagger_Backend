@@ -35,6 +35,12 @@ export class GuessesController {
     return this.guessesService.findAll(['location', 'user']);
   }
 
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  async findPersonalBest(){
+    return this.guessesService.findPersonalBest();
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: number) {

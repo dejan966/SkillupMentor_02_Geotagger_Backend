@@ -4,7 +4,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   CreateDateColumn,
-  UpdateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { Guess } from './guess.entity';
 
