@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Location } from 'entities/location.entity';
 import Logging from 'library/Logging';
@@ -37,5 +37,14 @@ export class LocationsService extends AbstractService {
         'Something went wrong while updating the data.',
       );
     }
+  }
+
+  async updateLocationImageId(id: number, location_img: string) {
+    const location = await this.findById(id);
+    if (location_img === location.image_url) {
+      throw new BadRequestException('Images have to be different.');
+    }
+    location.image_url = location_img;
+    return this.locationsRepository.save(location);
   }
 }

@@ -7,11 +7,20 @@ import {
   Param,
   Delete,
   UseGuards,
+  BadRequestException,
+  HttpCode,
+  HttpStatus,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UpdateLocationDto } from './dto/update-location.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { User } from 'entities/user.entity';
+import { saveLocationImageToStorage, isFileExtensionSafe, removeFile } from 'helpers/imageStorage';
+import { join } from 'path';
 
 @Controller('locations')
 export class LocationsController {
@@ -22,6 +31,24 @@ export class LocationsController {
   async create(@Body() createLocationDto: CreateLocationDto) {
     return this.locationsService.create(createLocationDto);
   }
+
+  @Post('upload/:id')
+  @UseInterceptors(FileInterceptor('image', saveLocationImageToStorage))
+  @HttpCode(HttpStatus.CREATED)
+  async uploadImage(@UploadedFile() file: Express.Multer.File, @Param('id') location_id: number): Promise<User> {
+    const filename = file?.filename;
+
+    if (!filename) throw new BadRequestException('File must be a png, jpg/jpeg');
+
+    const imagesFolderPath = join(process.cwd(), 'uploads/locations');
+    const fullImagePath = join(imagesFolderPath + '/' + file.filename);
+    if (await isFileExtensionSafe(fullImagePath)) {
+      return this.locationsService.updateLocationImageId(location_id, filename);
+    }
+    removeFile(fullImagePath);
+    throw new BadRequestException('File content does not match extension!');
+  }
+
 
   @Get()
   async findAll() {

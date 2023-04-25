@@ -1,6 +1,6 @@
 const FileType = import('file-type');
 import fs from 'fs';
-import Logging from '../library/Logging';
+import Logging from 'library/Logging';
 import { diskStorage, Options } from 'multer';
 import { extname } from 'path';
 
@@ -14,9 +14,31 @@ const validMimeTypes: validMimeType[] = [
   'image/jpeg',
 ];
 
-export const saveImageToStorage: Options = {
+export const saveAvatarToStorage: Options = {
   storage: diskStorage({
-    destination: './uploads',
+    destination: './uploads/avatars',
+    filename(req, file, callback) {
+      // Create unique suffix
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      // Get file extension
+      const ext = extname(file.originalname);
+      // Write filename
+      const filename = `${uniqueSuffix}${ext}`;
+
+      callback(null, filename);
+    },
+  }),
+  fileFilter(req, file, callback) {
+    const allowedMimeTypes: validMimeType[] = validMimeTypes;
+    allowedMimeTypes.includes(file.mimetype as validMimeType)
+      ? callback(null, true)
+      : callback(null, false);
+  },
+};
+
+export const saveLocationImageToStorage: Options = {
+  storage: diskStorage({
+    destination: './uploads/locations',
     filename(req, file, callback) {
       // Create unique suffix
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);

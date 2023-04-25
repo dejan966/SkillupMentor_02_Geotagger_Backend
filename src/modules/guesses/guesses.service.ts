@@ -33,7 +33,7 @@ export class GuessesService extends AbstractService {
   }
 
   async findPersonalBest(){
-    return this.guessesRepository.find({relations:['location', 'user'], order:{errorDistance: 'DESC'}}); //order by error distance
+    return this.guessesRepository.find({relations:['location', 'user'], order:{errorDistance: 'DESC'}});
   }
 
   async update(id: number, updateGuessDto: UpdateGuessDto) {

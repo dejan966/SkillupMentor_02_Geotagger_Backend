@@ -1,9 +1,12 @@
-import { IsOptional } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateGuessDto {
-  @IsOptional()
-  latitude?: number;
+  @IsNotEmpty()
+  latitude: number;
 
-  @IsOptional()
-  longitude?: number;
+  @IsNotEmpty()
+  longitude: number;
+
+  @IsNotEmpty()
+  errorDistance:number;
 }

@@ -28,7 +28,9 @@ export class Guess {
   })
   location: Location;
 
-  @ManyToOne(() => User, (user) => user.guesses, { onDelete: 'SET NULL' })
+  @ManyToOne(() => User, (user) => user.guesses, { 
+    onDelete: 'SET NULL' 
+  })
   user: User;
 
   @CreateDateColumn()
