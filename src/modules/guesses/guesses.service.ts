@@ -20,10 +20,19 @@ export class GuessesService extends AbstractService {
     super(guessesRepository);
   }
 
-  async create(createGuessDto: CreateGuessDto, user: User, locationId: number) {
+  async createGuess(
+    createGuessDto: CreateGuessDto,
+    user: User,
+    locationId: number,
+  ) {
+    const guess = await this.findByLocation(locationId);
+    if (guess) {
+      const errorDistance = createGuessDto.errorDistance;
+      return this.update(guess.id, { errorDistance });
+    }
     const location = (await this.locationsService.findById(
       locationId,
-    )) as unknown as Location;
+    )) as Location;
     const newGuess = await this.guessesRepository.create({
       ...createGuessDto,
       location,
@@ -32,8 +41,18 @@ export class GuessesService extends AbstractService {
     return this.guessesRepository.save(newGuess);
   }
 
-  async findPersonalBest(){
-    return this.guessesRepository.find({relations:['location', 'user'], order:{errorDistance: 'DESC'}});
+  async findByLocation(locationId: number) {
+    return this.guessesRepository.findOne({
+      where: { location: { id: locationId } },
+      relations: ['location', 'user'],
+    });
+  }
+
+  async findPersonalBest() {
+    return this.guessesRepository.find({
+      relations: ['location', 'user'],
+      order: { errorDistance: 'DESC' },
+    });
   }
 
   async update(id: number, updateGuessDto: UpdateGuessDto) {

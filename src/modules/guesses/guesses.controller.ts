@@ -26,7 +26,7 @@ export class GuessesController {
     @GetCurrentUser() user: User,
     @Param('id') locationId: number,
   ) {
-    return this.guessesService.create(createGuessDto, user, locationId);
+    return this.guessesService.createGuess(createGuessDto, user, locationId);
   }
 
   @Get()
@@ -37,23 +37,20 @@ export class GuessesController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async findPersonalBest(){
+  async findPersonalBest() {
     return this.guessesService.findPersonalBest();
+  }
+
+  @Get('location/:id')
+  @UseGuards(JwtAuthGuard)
+  async findByLocation(@Param('id') locationId: number) {
+    return this.guessesService.findByLocation(locationId);
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: number) {
     return this.guessesService.findById(id, ['location', 'user']);
-  }
-
-  @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  async update(
-    @Param('id') id: number,
-    @Body() updateGuessDto: UpdateGuessDto,
-  ) {
-    return this.guessesService.update(id, updateGuessDto);
   }
 
   @Delete(':id')
