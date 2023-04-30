@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Location } from 'entities/location.entity';
 import Logging from 'library/Logging';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { AbstractService } from '../common/abstract.service';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
@@ -21,6 +21,10 @@ export class LocationsService extends AbstractService {
       ...createLocationDto,
     });
     return this.locationsRepository.save(newLocation);
+  }
+
+  async findLocations(){
+    return this.locationsRepository.find({where:{guesses:{errorDistance:IsNull()}}});
   }
 
   async update(id: number, updateLocationDto: UpdateLocationDto) {

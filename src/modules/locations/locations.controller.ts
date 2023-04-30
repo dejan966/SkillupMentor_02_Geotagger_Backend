@@ -52,7 +52,7 @@ export class LocationsController {
 
   @Get()
   async findAll() {
-    return this.locationsService.findAll(['guesses']);
+    return this.locationsService.findLocations();
   }
 
   @Get('picture')
