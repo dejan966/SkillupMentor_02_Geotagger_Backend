@@ -9,7 +9,4 @@ export class UpdateLocationDto {
 
   @IsOptional()
   longitude?: number;
-
-  @IsOptional()
-  image_url?: number;
 }

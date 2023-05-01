@@ -79,6 +79,12 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
+  @Patch('/me/update-password')
+  @UseGuards(JwtAuthGuard)
+  async updatePassword(@GetCurrentUser() user: User, @Body() updateUserDto: { current_password: string; password: string; confirm_password: string }) {
+    return this.usersService.updatePassword(user, updateUserDto);
+  }
+
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.usersService.remove(id);

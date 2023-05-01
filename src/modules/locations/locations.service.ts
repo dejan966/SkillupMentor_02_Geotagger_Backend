@@ -6,6 +6,7 @@ import { IsNull, Repository } from 'typeorm';
 import { AbstractService } from '../common/abstract.service';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
+import { User } from 'entities/user.entity';
 
 @Injectable()
 export class LocationsService extends AbstractService {
@@ -16,9 +17,10 @@ export class LocationsService extends AbstractService {
     super(locationsRepository);
   }
 
-  async create(createLocationDto: CreateLocationDto) {
+  async create(createLocationDto: CreateLocationDto, user:User) {
     const newLocation = this.locationsRepository.create({
       ...createLocationDto,
+      user
     });
     return this.locationsRepository.save(newLocation);
   }

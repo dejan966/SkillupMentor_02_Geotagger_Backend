@@ -11,6 +11,7 @@ import {
 import { Guess } from './guess.entity';
 import { Log } from './log.entity';
 import { Role } from './role.entity';
+import { Location } from './location.entity';
 
 @Entity()
 export class User {
@@ -45,6 +46,9 @@ export class User {
   @UpdateDateColumn()
   updated_at: string;
 
+  @OneToMany(() => Location, (location) => location.user)
+  locations: Location[];
+  
   @OneToMany(() => Guess, (guess) => guess.user)
   guesses: Guess[];
 

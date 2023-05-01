@@ -9,7 +9,4 @@ export class CreateLocationDto {
 
   @IsNotEmpty()
   longitude: number;
-
-  @IsNotEmpty()
-  image_url: string;
 }

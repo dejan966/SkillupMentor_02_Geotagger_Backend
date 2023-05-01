@@ -21,6 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from 'entities/user.entity';
 import { saveLocationImageToStorage, isFileExtensionSafe, removeFile } from 'helpers/imageStorage';
 import { join } from 'path';
+import { GetCurrentUser } from 'decorators/get-current-user.decorator';
 
 @Controller('locations')
 export class LocationsController {
@@ -28,8 +29,8 @@ export class LocationsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async create(@Body() createLocationDto: CreateLocationDto) {
-    return this.locationsService.create(createLocationDto);
+  async create(@Body() createLocationDto: CreateLocationDto, @GetCurrentUser() user: User) {
+    return this.locationsService.create(createLocationDto, user);
   }
 
   @Post('upload/:id')

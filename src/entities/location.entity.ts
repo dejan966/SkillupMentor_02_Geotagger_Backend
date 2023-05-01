@@ -4,9 +4,11 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  ManyToOne
 } from 'typeorm';
 import { Guess } from './guess.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Location {
@@ -22,8 +24,11 @@ export class Location {
   @Column({ type: 'decimal', default: 0.0 })
   longitude: number;
 
-  @Column()
+  @Column({ default: 'default_location.png' })
   image_url: string;
+
+  @ManyToOne(() => User, (user) => user.locations, { onDelete: 'SET NULL' })
+  user: User;
 
   @CreateDateColumn()
   created_at: string;

@@ -3,8 +3,8 @@ POST http://localhost:8080/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  	"email": "test@gmail.com",
-  	"password": "Slenderman1234!"
+  	"email": "test2@gmail.com",
+  	"password": "Slenderman12!"
 }
 
 ### POST /auth/register
@@ -44,9 +44,9 @@ POST http://localhost:8080/locations HTTP/1.1
 Content-Type: application/json
 	
 {
-	"latitude": 45.1,
-	"longitude": 44.6,
-	"image_url": "fdh"
+	"latitude": 45.145,
+	"longitude": 44.698,
+	"image_url": "rhys-i-found.jpg"
 }
 
 ### GET /guesses
