@@ -26,7 +26,11 @@ export class LocationsService extends AbstractService {
   }
 
   async findLocations(){
-    return this.locationsRepository.find({where:{guesses:{errorDistance:IsNull()}}});
+    return this.locationsRepository.find({where:{guesses:{errorDistance:IsNull()}}, relations:['user']});
+  }
+
+  async findCurrUserLocations(id:number){
+    return this.locationsRepository.find({where:{user:{id}}, relations:['guesses', 'user']});
   }
 
   async update(id: number, updateLocationDto: UpdateLocationDto) {

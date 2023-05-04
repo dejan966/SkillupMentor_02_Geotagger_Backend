@@ -34,13 +34,11 @@ export class LocationsController {
   }
 
   @Post('upload/:id')
-  @UseInterceptors(FileInterceptor('image', saveLocationImageToStorage))
+  @UseInterceptors(FileInterceptor('image_url', saveLocationImageToStorage))
   @HttpCode(HttpStatus.CREATED)
   async uploadImage(@UploadedFile() file: Express.Multer.File, @Param('id') location_id: number): Promise<User> {
     const filename = file?.filename;
-
     if (!filename) throw new BadRequestException('File must be a png, jpg/jpeg');
-
     const imagesFolderPath = join(process.cwd(), 'uploads/locations');
     const fullImagePath = join(imagesFolderPath + '/' + file.filename);
     if (await isFileExtensionSafe(fullImagePath)) {
@@ -49,7 +47,6 @@ export class LocationsController {
     removeFile(fullImagePath);
     throw new BadRequestException('File content does not match extension!');
   }
-
 
   @Get()
   async findAll() {
@@ -65,7 +62,13 @@ export class LocationsController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: number) {
-    return this.locationsService.findById(id, ['guesses']);
+    return this.locationsService.findById(id, ['guesses', 'user']);
+  }
+
+  @Get('user/:id')
+  @UseGuards(JwtAuthGuard)
+  async findCurrUserLocations(@Param('id') userId: number) {
+    return this.locationsService.findCurrUserLocations(userId);
   }
 
   @Patch(':id')
