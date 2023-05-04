@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Location } from 'entities/location.entity';
 import Logging from 'library/Logging';
@@ -7,6 +7,7 @@ import { AbstractService } from '../common/abstract.service';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { User } from 'entities/user.entity';
+import { PaginatedResult } from 'interfaces/paginated-result.interface';
 
 @Injectable()
 export class LocationsService extends AbstractService {
@@ -25,8 +26,30 @@ export class LocationsService extends AbstractService {
     return this.locationsRepository.save(newLocation);
   }
 
-  async findLocations(){
-    return this.locationsRepository.find({where:{guesses:{errorDistance:IsNull()}}, relations:['user']});
+  async locationPaginate(page = 1): Promise<PaginatedResult> {
+    const take = 10;
+    try {
+      const [data, total] = await this.locationsRepository.findAndCount({
+        where:{guesses:{errorDistance:IsNull()}},
+        take,
+        skip: (page - 1) * take,
+        relations:['user'],
+      });
+
+      return {
+        data: data,
+        meta: {
+          total,
+          page,
+          last_page: Math.ceil(total / take),
+        },
+      };
+    } catch (error) {
+      Logging.error(error);
+      throw new InternalServerErrorException(
+        'Something went wrong while searching for a paginated elements.',
+      );
+    }
   }
 
   async findCurrUserLocations(id:number){

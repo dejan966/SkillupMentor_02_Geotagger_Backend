@@ -7,6 +7,7 @@ import {
   Get,
   Param,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { GuessesService } from './guesses.service';
 import { CreateGuessDto } from './dto/create-guess.dto';
@@ -14,6 +15,7 @@ import { User } from 'entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UpdateGuessDto } from './dto/update-guess.dto';
 import { GetCurrentUser } from 'decorators/get-current-user.decorator';
+import { PaginatedResult } from 'interfaces/paginated-result.interface';
 
 @Controller('guesses')
 export class GuessesController {
@@ -31,8 +33,8 @@ export class GuessesController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async findAll() {
-    return this.guessesService.findAll(['location', 'user']);
+  async findAll(@Query('page') page: number):Promise<PaginatedResult> {
+    return this.guessesService.paginate(page, ['location', 'user']);
   }
 
   @Get('me')

@@ -22,6 +22,7 @@ import { User } from 'entities/user.entity';
 import { saveLocationImageToStorage, isFileExtensionSafe, removeFile } from 'helpers/imageStorage';
 import { join } from 'path';
 import { GetCurrentUser } from 'decorators/get-current-user.decorator';
+import { PaginatedResult } from 'interfaces/paginated-result.interface';
 
 @Controller('locations')
 export class LocationsController {
@@ -49,8 +50,8 @@ export class LocationsController {
   }
 
   @Get()
-  async findAll() {
-    return this.locationsService.findLocations();
+  async findAll():Promise<PaginatedResult> {
+    return this.locationsService.locationPaginate();
   }
 
   @Get('picture')
