@@ -26,32 +26,6 @@ export class LocationsService extends AbstractService {
     return this.locationsRepository.save(newLocation);
   }
 
-  async locationPaginate(page = 1): Promise<PaginatedResult> {
-    const take = 9;
-    try {
-      const [data, total] = await this.locationsRepository.findAndCount({
-        where:{guesses:{errorDistance:IsNull()}},
-        take,
-        skip: (page - 1) * take,
-        relations:['user'],
-      });
-
-      return {
-        data: data,
-        meta: {
-          total,
-          page,
-          last_page: Math.ceil(total / take),
-        },
-      };
-    } catch (error) {
-      Logging.error(error);
-      throw new InternalServerErrorException(
-        'Something went wrong while searching for a paginated elements.',
-      );
-    }
-  }
-
   async findCurrUserLocations(id:number){
     return this.locationsRepository.find({where:{user:{id}}, relations:['guesses', 'user']});
   }
