@@ -27,7 +27,7 @@ export class LocationsService extends AbstractService {
   }
 
   async locationPaginate(page = 1): Promise<PaginatedResult> {
-    const take = 10;
+    const take = 9;
     try {
       const [data, total] = await this.locationsRepository.findAndCount({
         where:{guesses:{errorDistance:IsNull()}},

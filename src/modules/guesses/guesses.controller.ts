@@ -13,7 +13,6 @@ import { GuessesService } from './guesses.service';
 import { CreateGuessDto } from './dto/create-guess.dto';
 import { User } from 'entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { UpdateGuessDto } from './dto/update-guess.dto';
 import { GetCurrentUser } from 'decorators/get-current-user.decorator';
 import { PaginatedResult } from 'interfaces/paginated-result.interface';
 
@@ -33,20 +32,20 @@ export class GuessesController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async findAll(@Query('page') page: number):Promise<PaginatedResult> {
-    return this.guessesService.paginate(page, ['location', 'user']);
+  async findAll() {
+    return this.guessesService.findAll(['location', 'user']);
   }
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async findPersonalBest() {
-    return this.guessesService.findPersonalBest();
+  async findPersonalBest(@Query('page') page: number, @GetCurrentUser() user:User) {
+    return this.guessesService.paginatePersonalBest(page, user);
   }
 
   @Get('location/:id')
   @UseGuards(JwtAuthGuard)
   async findByLocation(@Param('id') locationId: number) {
-    return this.guessesService.findByLocation(locationId);
+    return this.guessesService.findPersonalByLocation(locationId);
   }
 
   @Get(':id')
