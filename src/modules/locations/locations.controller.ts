@@ -12,6 +12,7 @@ import {
   HttpStatus,
   UploadedFile,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { CreateLocationDto } from './dto/create-location.dto';
@@ -50,8 +51,8 @@ export class LocationsController {
   }
 
   @Get()
-  async findAll():Promise<PaginatedResult> {
-    return this.locationsService.locationPaginate();
+  async findAll(@Query('page') page: number):Promise<PaginatedResult> {
+    return this.locationsService.paginate(page, ['user']);
   }
 
   @Get('picture')

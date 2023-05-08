@@ -20,7 +20,7 @@ export class Guess {
   @Column({ type: 'decimal', default: 0.0 })
   longitude: number;
 
-  @Column({ type: 'decimal' })
+  @Column()
   errorDistance: number;
 
   @ManyToOne(() => Location, (location) => location.guesses, {

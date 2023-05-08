@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { Location } from 'entities/location.entity';
 import { PaginatedResult } from 'interfaces/paginated-result.interface';
 import Logging from 'library/Logging';
 import { Repository } from 'typeorm';
@@ -67,7 +68,7 @@ export abstract class AbstractService {
   }
 
   async paginate(page = 1, relations = []): Promise<PaginatedResult> {
-    const take = 10;
+    const take = 9;
     try {
       const [data, total] = await this.repository.findAndCount({
         take,
