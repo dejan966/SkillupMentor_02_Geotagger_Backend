@@ -19,6 +19,7 @@ import { configValidationSchema } from 'config/schema.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { RolesModule } from './roles/roles.module';
 import { UtilsModule } from './utils/utils.module';
+import { PasswordResetTokensModule } from './password_reset_tokens/password_reset_tokens.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UtilsModule } from './utils/utils.module';
     DatabaseModule,
     UtilsModule,
     AuthModule,
+    PasswordResetTokensModule,
     UsersModule,
     RolesModule,
     LocationsModule,
