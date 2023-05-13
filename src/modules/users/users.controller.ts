@@ -65,10 +65,10 @@ export class UsersController {
     throw new BadRequestException('File content does not match extension!');
   }
 
-  @Get('me/reset-password')
+  @Post('me/reset-password')
   @UseGuards(JwtAuthGuard)
-  async verifyEmail(userEmail:string){
-    
+  async verifyEmail(@Body() updateUserDto: { email: string; }){
+    console.log(updateUserDto.email)
   }
 
   @Get(':id')
