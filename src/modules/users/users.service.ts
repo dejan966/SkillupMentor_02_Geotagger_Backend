@@ -56,6 +56,17 @@ export class UsersService extends AbstractService {
     }
   }
 
+  async checkEmail(userEmail: string) {
+    const user = await this.findBy({ email: userEmail });
+    if(user){
+      return this.sendEmail(userEmail)
+    }
+  }
+
+  async sendEmail(userEmail:string){
+
+  }
+
   async updatePassword(
     user: User,
     updateUserDto: {

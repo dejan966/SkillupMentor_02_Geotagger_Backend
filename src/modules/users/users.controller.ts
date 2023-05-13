@@ -67,8 +67,8 @@ export class UsersController {
 
   @Post('me/reset-password')
   @UseGuards(JwtAuthGuard)
-  async verifyEmail(@Body() updateUserDto: { email: string; }){
-    console.log(updateUserDto.email)
+  async checkEmail(@Body() updateUserDto: { email: string; }){
+    return this.usersService.checkEmail(updateUserDto.email);
   }
 
   @Get(':id')
