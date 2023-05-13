@@ -9,7 +9,7 @@ export class PasswordResetTokensController {
 
   @Post()
   async create(@Body() createPasswordResetTokenDto: CreatePasswordResetTokenDto) {
-    return this.passwordResetTokensService.create(createPasswordResetTokenDto);
+    return this.passwordResetTokensService.createToken(createPasswordResetTokenDto);
   }
 
   @Get()
@@ -29,6 +29,6 @@ export class PasswordResetTokensController {
 
   @Delete(':id')
   async remove(@Param('id') id: number) {
-    return this.passwordResetTokensService.remove(id);
+    return this.passwordResetTokensService.removeToken(id);
   }
 }

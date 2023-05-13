@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,12 +12,16 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AbstractService } from 'modules/common/abstract.service';
 import { JwtService } from '@nestjs/jwt';
+import { PasswordResetTokensService } from 'modules/password_reset_tokens/password_reset_tokens.service';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class UsersService extends AbstractService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private readonly password_reset_tokens_service: PasswordResetTokensService,
+    private readonly mailerService: MailerService,
     private readonly jwtService: JwtService,
   ) {
     super(usersRepository);
@@ -59,15 +62,22 @@ export class UsersService extends AbstractService {
   async checkEmail(userEmail: string) {
     const user = await this.findBy({ email: userEmail });
     if(user){
-      return this.sendEmail(userEmail)
+      return this.sendEmail(user)
     }
   }
 
-  async sendEmail(userEmail:string){
+  async sendEmail(user:User){
     const token = Math.random().toString(36).slice(2, 12);
     const currDate = new Date();
-    const expirationDate = new Date(currDate.getTime() + 15 * 60000);
-    
+    const token_expiry_date = new Date(currDate.getTime() + 15 * 60000).toString();
+    await this.password_reset_tokens_service.createToken({token, token_expiry_date, user})
+    await this.mailerService.sendMail({
+      from: '"Geotagger Support <ultimate24208@gmail.com>"',
+      to: `${user.email}`,
+      subject: 'Your password reset token',
+      text: 'Hi. Your password reset token is:',
+      html: `<h3>Hi.</h3><p>Your password reset token is: <b>${token}</b>.</p><p>It expires in 15 minutes.</p>`
+    })
   }
 
   async updatePassword(
