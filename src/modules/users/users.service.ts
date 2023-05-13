@@ -64,7 +64,10 @@ export class UsersService extends AbstractService {
   }
 
   async sendEmail(userEmail:string){
-
+    const token = Math.random().toString(36).slice(2, 12);
+    const currDate = new Date();
+    const expirationDate = new Date(currDate.getTime() + 15 * 60000);
+    
   }
 
   async updatePassword(
