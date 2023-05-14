@@ -4,13 +4,17 @@ import { UpdatePasswordResetTokenDto } from './dto/update-password_reset_token.d
 import { Password_Reset_Token } from 'entities/password_reset_token';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { AbstractService } from 'modules/common/abstract.service';
+import { User } from 'entities/user.entity';
 
 @Injectable()
-export class PasswordResetTokensService {
+export class PasswordResetTokensService extends AbstractService {
   constructor(
     @InjectRepository(Password_Reset_Token)
     private readonly password_token_repository: Repository<Password_Reset_Token>,
-  ) {}
+  ) {
+    super(password_token_repository)
+  }
 
   async createToken(createPasswordResetTokenDto: CreatePasswordResetTokenDto) {
     const newToken = await this.password_token_repository.create({
@@ -19,19 +23,9 @@ export class PasswordResetTokensService {
     return this.password_token_repository.save(newToken);
   }
 
-  async findAll() {
-    return `This action returns all passwordResetTokens`;
-  }
-
-  async findOne(id: number) {
-    return `This action returns a #${id} passwordResetToken`;
-  }
-
-  async update(
-    id: number,
-    updatePasswordResetTokenDto: UpdatePasswordResetTokenDto,
-  ) {
-    return `This action updates a #${id} passwordResetToken`;
+  async findByUser(user:User){
+    const tokenUser = await this.password_token_repository.findOne({where : {user: {email: user.email}}})
+    return tokenUser
   }
 
   async removeToken(id: number) {

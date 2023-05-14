@@ -66,9 +66,16 @@ export class UsersService extends AbstractService {
   }
 
   async sendEmail(user: User) {
+    console.log(user)
+    const userToken = await this.password_reset_tokens_service.findByUser(user)
+    if(userToken){
+      throw new BadRequestException('User already requested token for password reset.')
+    }
+
     const token = Math.random().toString(36).slice(2, 12);
     const currDate = new Date();
     const token_expiry_date = new Date(currDate.getTime() + 15 * 60000);
+
     await this.password_reset_tokens_service.createToken({
       token,
       token_expiry_date,

@@ -19,12 +19,7 @@ export class PasswordResetTokensController {
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.passwordResetTokensService.findOne(id);
-  }
-
-  @Patch(':id')
-  async update(@Param('id') id: number, @Body() updatePasswordResetTokenDto: UpdatePasswordResetTokenDto) {
-    return this.passwordResetTokensService.update(id, updatePasswordResetTokenDto);
+    return this.passwordResetTokensService.findById(id);
   }
 
   @Delete(':id')
