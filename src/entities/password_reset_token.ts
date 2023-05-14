@@ -13,5 +13,5 @@ export class Password_Reset_Token {
   token: string;
 
   @Column({ type: 'date' })
-  token_expiry_date: string;
+  token_expiry_date: Date;
 }

@@ -6,7 +6,7 @@ export class CreatePasswordResetTokenDto {
     token:string;
 
     @IsNotEmpty()
-    token_expiry_date: string;
+    token_expiry_date: Date;
 
     @IsNotEmpty()
     user: User;
