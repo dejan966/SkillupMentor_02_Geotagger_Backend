@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePasswordResetTokenDto } from './dto/create-password_reset_token.dto';
 import { UpdatePasswordResetTokenDto } from './dto/update-password_reset_token.dto';
-import { Password_Reset_Token } from 'entities/password_reset_token';
+import { Password_Reset_Token } from 'entities/password_reset_token.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AbstractService } from 'modules/common/abstract.service';
@@ -28,7 +28,13 @@ export class PasswordResetTokensService extends AbstractService {
     return tokenUser
   }
 
-  async removeToken(id: number) {
-    return this.password_token_repository.delete(id);
+  async findByToken(token:string){
+    const password_reset_info = await this.password_token_repository.findOne({where:{token}})
+    return password_reset_info
+  }
+
+  async removeToken(token: string) {
+    const password_token = await this.password_token_repository.findOne({where:{token}})
+    return this.password_token_repository.remove(password_token);
   }
 }

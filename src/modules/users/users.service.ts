@@ -66,10 +66,11 @@ export class UsersService extends AbstractService {
   }
 
   async sendEmail(user: User) {
-    console.log(user)
-    const userToken = await this.password_reset_tokens_service.findByUser(user)
-    if(userToken){
-      throw new BadRequestException('User already requested token for password reset.')
+    const userToken = await this.password_reset_tokens_service.findByUser(user);
+    if (userToken) {
+      throw new BadRequestException(
+        'User already requested token for password reset.',
+      );
     }
 
     const token = Math.random().toString(36).slice(2, 12);
@@ -85,8 +86,8 @@ export class UsersService extends AbstractService {
       from: 'Geotagger Support <ultimate24208@gmail.com>',
       to: user.email,
       subject: 'Your password reset token',
-      text: 'Hi. Your password reset token is:',
-      html: `Hi.<p>Your password reset token is: <b>${token}</b>.</p><p>It expires in 15 minutes.</p>`,
+      text: `Hi.<p>Your password reset link is: </p><p>It expires in 15 minutes.</p>`,
+      html: `Hi.<p>Your password reset link is: http://localhost:3000/me/update-password?token=${token}.</p><p>It expires in 15 minutes.</p>`,
     });
     return response;
   }
