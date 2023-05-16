@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AbstractService } from 'modules/common/abstract.service';
 import { User } from 'entities/user.entity';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class PasswordResetTokensService extends AbstractService {
@@ -31,6 +32,11 @@ export class PasswordResetTokensService extends AbstractService {
   async findByToken(token:string){
     const password_reset_info = await this.password_token_repository.findOne({where:{token}})
     return password_reset_info
+  }
+
+  @Cron('0 00 12 * * 1-5')
+  async handleTokenDeletion() {
+    return await this.password_token_repository.clear()
   }
 
   async removeToken(token: string) {
