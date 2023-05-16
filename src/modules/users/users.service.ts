@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,13 +12,16 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AbstractService } from 'modules/common/abstract.service';
 import { JwtService } from '@nestjs/jwt';
+import { PasswordResetTokensService } from 'modules/password_reset_tokens/password_reset_tokens.service';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class UsersService extends AbstractService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-    private readonly jwtService: JwtService,
+    private readonly password_reset_tokens_service: PasswordResetTokensService,
+    private readonly mailerService: MailerService,
   ) {
     super(usersRepository);
   }
@@ -54,6 +56,40 @@ export class UsersService extends AbstractService {
         'Something went wrong while updating the data.',
       );
     }
+  }
+
+  async checkEmail(userEmail: string) {
+    const user = await this.findBy({ email: userEmail });
+    if (user) {
+      return this.sendEmail(user);
+    }
+  }
+
+  async sendEmail(user: User) {
+    const userToken = await this.password_reset_tokens_service.findByUser(user);
+    if (userToken) {
+      throw new BadRequestException(
+        'User already requested token for password reset.',
+      );
+    }
+
+    const token = Math.random().toString(36).slice(2, 12);
+    const currDate = new Date();
+    const token_expiry_date = new Date(currDate.getTime() + 15 * 60000);
+
+    await this.password_reset_tokens_service.createToken({
+      token,
+      token_expiry_date,
+      user,
+    });
+    const response = await this.mailerService.sendMail({
+      from: 'Geotagger Support <ultimate24208@gmail.com>',
+      to: user.email,
+      subject: 'Your password reset token',
+      text: `Hi.<p>Your password reset link is: </p><p>It expires in 15 minutes.</p>`,
+      html: `Hi.<p>Your password reset link is: http://localhost:3000/me/update-password?token=${token}.</p><p>It expires in 15 minutes.</p>`,
+    });
+    return response;
   }
 
   async updatePassword(

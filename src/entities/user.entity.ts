@@ -12,6 +12,7 @@ import { Guess } from './guess.entity';
 import { Log } from './log.entity';
 import { Role } from './role.entity';
 import { Location } from './location.entity';
+import { Password_Reset_Token } from './password_reset_token.entity';
 
 @Entity()
 export class User {
@@ -31,7 +32,7 @@ export class User {
   @Exclude()
   password: string;
 
-  @Column({ default: 'default_profile.png' })
+  @Column({ default: 'default_profile.svg' })
   avatar: string;
 
   @Column({ default: true })
@@ -54,4 +55,7 @@ export class User {
 
   @OneToMany(() => Log, (log) => log.user)
   logs: Log[];
+
+  @OneToMany(() => Password_Reset_Token, (password_reset_token) => password_reset_token.user)
+  password_reset_tokens: Password_Reset_Token[];
 }

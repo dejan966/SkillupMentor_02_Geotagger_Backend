@@ -2,12 +2,11 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { InjectRepository } from '@nestjs/typeorm';
 import { Location } from 'entities/location.entity';
 import Logging from 'library/Logging';
-import { IsNull, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AbstractService } from '../common/abstract.service';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { User } from 'entities/user.entity';
-import { PaginatedResult } from 'interfaces/paginated-result.interface';
 
 @Injectable()
 export class LocationsService extends AbstractService {
