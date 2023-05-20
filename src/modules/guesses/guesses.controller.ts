@@ -6,7 +6,6 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Query,
 } from '@nestjs/common';
 import { GuessesService } from './guesses.service';
@@ -14,7 +13,6 @@ import { CreateGuessDto } from './dto/create-guess.dto';
 import { User } from 'entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { GetCurrentUser } from 'decorators/get-current-user.decorator';
-import { PaginatedResult } from 'interfaces/paginated-result.interface';
 
 @Controller('guesses')
 export class GuessesController {

@@ -1,11 +1,9 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { User } from './user.entity';
+import { Base } from './base.entity';
 
 @Entity()
-export class Password_Reset_Token {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Password_Reset_Token extends Base {
   @ManyToOne(() => User, (user) => user.password_reset_tokens, { onDelete: 'SET NULL' })
   user: User;
 
@@ -14,10 +12,4 @@ export class Password_Reset_Token {
 
   @Column({ type: 'timestamp' })
   token_expiry_date: Date;
-
-  @CreateDateColumn()
-  created_at: string;
-
-  @UpdateDateColumn()
-  updated_at: string;
 }

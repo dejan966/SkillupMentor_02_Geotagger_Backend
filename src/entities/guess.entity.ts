@@ -1,19 +1,10 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Column, ManyToOne } from 'typeorm';
 import { Location } from './location.entity';
 import { User } from './user.entity';
+import { Base } from './base.entity';
 
 @Entity()
-export class Guess {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Guess extends Base {
   @Column({ type: 'decimal', default: 0.0 })
   latitude: number;
 
@@ -28,14 +19,8 @@ export class Guess {
   })
   location: Location;
 
-  @ManyToOne(() => User, (user) => user.guesses, { 
-    onDelete: 'SET NULL' 
+  @ManyToOne(() => User, (user) => user.guesses, {
+    onDelete: 'SET NULL',
   })
   user: User;
-
-  @CreateDateColumn()
-  created_at: string;
-
-  @UpdateDateColumn()
-  updated_at: string;
 }

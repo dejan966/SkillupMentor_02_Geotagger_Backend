@@ -19,6 +19,7 @@ import { UtilsModule } from './utils/utils.module';
 import { PasswordResetTokensModule } from './password_reset_tokens/password_reset_tokens.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ScheduleModule } from '@nestjs/schedule';
+import { LoggerMiddleware } from 'middleware/logger.middleware';
 
 @Module({
 imports: [
@@ -56,7 +57,7 @@ imports: [
   ],
 })
 export class AppModule {
-  /*   configure(consumer: MiddlewareConsumer) {
+    configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })
-  } */
+  }
 }
