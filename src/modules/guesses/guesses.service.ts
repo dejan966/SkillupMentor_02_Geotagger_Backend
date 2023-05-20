@@ -77,7 +77,7 @@ export class GuessesService extends AbstractService {
   }
 
   async paginatePersonalBest(page = 1, user: User): Promise<PaginatedResult> {
-    const take = 9;
+    const take = 4;
     try {
       const [data, total] = await this.guessesRepository.findAndCount({
         where: { user: { id: user.id } },

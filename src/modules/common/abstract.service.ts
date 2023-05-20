@@ -67,7 +67,7 @@ export abstract class AbstractService {
   }
 
   async paginate(page = 1, relations = []): Promise<PaginatedResult> {
-    const take = 9;
+    const take = 4;
     try {
       const [data, total] = await this.repository.findAndCount({
         take,
@@ -86,7 +86,7 @@ export abstract class AbstractService {
     } catch (error) {
       Logging.error(error);
       throw new InternalServerErrorException(
-        'Something went wrong while searching for a paginated elements.',
+        'Something went wrong while searching for paginated elements.',
       );
     }
   }
