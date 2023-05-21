@@ -49,7 +49,7 @@ export class UsersController {
 
   @Get()
   async findAll() {
-    return this.usersService.findAll(['role', 'locations', 'guessesy']);
+    return this.usersService.findAll(['role', 'locations', 'guesses']);
   }
 
   @Post('upload/:id')

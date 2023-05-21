@@ -7,13 +7,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
 import Logging from 'library/Logging';
 import { Repository } from 'typeorm';
-import { compareHash, hash } from 'utils/bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AbstractService } from 'modules/common/abstract.service';
-import { JwtService } from '@nestjs/jwt';
 import { PasswordResetTokensService } from 'modules/password_reset_tokens/password_reset_tokens.service';
 import { MailerService } from '@nestjs-modules/mailer';
+import { UtilsService } from 'modules/utils/utils.service';
 
 @Injectable()
 export class UsersService extends AbstractService {
@@ -22,6 +21,7 @@ export class UsersService extends AbstractService {
     private readonly usersRepository: Repository<User>,
     private readonly password_reset_tokens_service: PasswordResetTokensService,
     private readonly mailerService: MailerService,
+    private readonly utilsService: UtilsService
   ) {
     super(usersRepository);
   }
@@ -101,15 +101,15 @@ export class UsersService extends AbstractService {
     },
   ): Promise<User> {
     if (updateUserDto.password && updateUserDto.confirm_password) {
-      if (!(await compareHash(updateUserDto.current_password, user.password)))
+      if (!(await this.utilsService.compareHash(updateUserDto.current_password, user.password)))
         throw new BadRequestException('Incorrect current password');
       if (updateUserDto.password !== updateUserDto.confirm_password)
         throw new BadRequestException('Passwords do not match.');
-      if (await compareHash(updateUserDto.password, user.password))
+      if (await this.utilsService.compareHash(updateUserDto.password, user.password))
         throw new BadRequestException(
           'New password cannot be the same as old password.',
         );
-      user.password = await hash(updateUserDto.password);
+      user.password = await this.utilsService.hash(updateUserDto.password);
     }
     return this.usersRepository.save(user);
   }

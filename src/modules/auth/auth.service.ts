@@ -6,14 +6,15 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'entities/user.entity';
 import Logging from 'library/Logging';
 import { UsersService } from '../users/users.service';
-import { compareHash, hash } from 'utils/bcrypt';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { UtilsService } from 'modules/utils/utils.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private utilsService: UtilsService
   ) {}
 
   async validateUser(email: string, password: string): Promise<User> {
@@ -22,7 +23,7 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('Invalid credentials');
     }
-    if (!(await compareHash(password, user.password))) {
+    if (!(await this.utilsService.compareHash(password, user.password))) {
       throw new BadRequestException('Invalid credentials');
     }
     Logging.info('User is valid');
@@ -30,7 +31,7 @@ export class AuthService {
   }
 
   async register(registerUserDto: RegisterUserDto): Promise<User> {
-    const hashedPassword: string = await hash(registerUserDto.password);
+    const hashedPassword: string = await this.utilsService.hash(registerUserDto.password);
     const user = await this.usersService.create({
       ...registerUserDto,
       password: hashedPassword,

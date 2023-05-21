@@ -24,6 +24,7 @@ import { saveLocationImageToStorage, isFileExtensionSafe, removeFile } from 'hel
 import { join } from 'path';
 import { GetCurrentUser } from 'decorators/get-current-user.decorator';
 import { PaginatedResult } from 'interfaces/paginated-result.interface';
+import { UserGuard } from 'modules/auth/guards/user.guard';
 
 @Controller('locations')
 export class LocationsController {
@@ -37,6 +38,7 @@ export class LocationsController {
 
   @Post('upload/:id')
   @UseInterceptors(FileInterceptor('image_url', saveLocationImageToStorage))
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   async uploadImage(@UploadedFile() file: Express.Multer.File, @Param('id') location_id: number): Promise<User> {
     const filename = file?.filename;
@@ -74,6 +76,7 @@ export class LocationsController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, UserGuard)
   async update(
     @Param('id') id: number,
     @Body() updateLocationDto: UpdateLocationDto,
@@ -82,7 +85,7 @@ export class LocationsController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, UserGuard)
   async remove(@Param('id') id: number) {
     return this.locationsService.remove(id);
   }
