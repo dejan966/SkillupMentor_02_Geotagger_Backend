@@ -48,7 +48,7 @@ export class GuessesService extends AbstractService {
 
   async findByLocation(locationId: number, user: User) {
     return this.guessesRepository.findOne({
-      where: { user, location: { id: locationId } },
+      where: { user: { id: user.id }, location: { id: locationId } },
       relations: ['location', 'user'],
     });
   }
@@ -77,7 +77,7 @@ export class GuessesService extends AbstractService {
   }
 
   async paginatePersonalBest(page = 1, user: User): Promise<PaginatedResult> {
-    const take = 4;
+    const take = 9;
     try {
       const [data, total] = await this.guessesRepository.findAndCount({
         where: { user: { id: user.id } },
