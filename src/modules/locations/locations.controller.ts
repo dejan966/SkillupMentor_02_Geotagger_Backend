@@ -40,7 +40,7 @@ export class LocationsController {
   @UseInterceptors(FileInterceptor('image_url', saveLocationImageToStorage))
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
-  async uploadImage(@UploadedFile() file: Express.Multer.File, @Param('id') location_id: number): Promise<User> {
+  async uploadImage(@UploadedFile() file: Express.Multer.File, @Param('id') location_id: number) {
     const filename = file?.filename;
     if (!filename) throw new BadRequestException('File must be a png, jpg/jpeg');
     const imagesFolderPath = join(process.cwd(), 'uploads/locations');

@@ -10,18 +10,18 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AbstractService } from 'modules/common/abstract.service';
-import { PasswordResetTokensService } from 'modules/password_reset_tokens/password_reset_tokens.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { UtilsService } from 'modules/utils/utils.service';
+import { PasswordResetTokensService } from 'modules/password_reset_tokens/password_reset_tokens.service';
 
 @Injectable()
-export class UsersService extends AbstractService {
+export class UsersService extends AbstractService<User> {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-    private readonly password_reset_tokens_service: PasswordResetTokensService,
     private readonly mailerService: MailerService,
-    private readonly utilsService: UtilsService
+    private readonly utilsService: UtilsService,
+    private readonly passwordResetService: PasswordResetTokensService
   ) {
     super(usersRepository);
   }
@@ -66,7 +66,7 @@ export class UsersService extends AbstractService {
   }
 
   async sendEmail(user: User) {
-    const userToken = await this.password_reset_tokens_service.findByUser(user);
+    const userToken = await this.passwordResetService.findByUser(user);
     if (userToken) {
       throw new BadRequestException(
         'User already requested token for password reset.',
@@ -77,7 +77,7 @@ export class UsersService extends AbstractService {
     const currDate = new Date();
     const token_expiry_date = new Date(currDate.getTime() + 15 * 60000);
 
-    await this.password_reset_tokens_service.createToken({
+    await this.passwordResetService.createToken({
       token,
       token_expiry_date,
       user,

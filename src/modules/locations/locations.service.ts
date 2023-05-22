@@ -9,7 +9,7 @@ import { UpdateLocationDto } from './dto/update-location.dto';
 import { User } from 'entities/user.entity';
 
 @Injectable()
-export class LocationsService extends AbstractService {
+export class LocationsService extends AbstractService<Location> {
   constructor(
     @InjectRepository(Location)
     private readonly locationsRepository: Repository<Location>,

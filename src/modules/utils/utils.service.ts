@@ -15,7 +15,7 @@ export class UtilsService {
     }
   }
 
-  async compareHash(data: string | Buffer, encryptedData: string) {
+  async compareHash(data: string, encryptedData: string) {
     try {
       return bcrypt.compare(data, encryptedData);
     } catch (error) {

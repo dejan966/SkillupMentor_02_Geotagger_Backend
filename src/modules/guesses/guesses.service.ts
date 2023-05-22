@@ -16,7 +16,7 @@ import { UpdateGuessDto } from './dto/update-guess.dto';
 import { PaginatedResult } from 'interfaces/paginated-result.interface';
 
 @Injectable()
-export class GuessesService extends AbstractService {
+export class GuessesService extends AbstractService<Guess> {
   constructor(
     @InjectRepository(Guess)
     private readonly guessesRepository: Repository<Guess>,

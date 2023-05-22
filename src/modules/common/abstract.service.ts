@@ -5,13 +5,13 @@ import {
 } from '@nestjs/common';
 import { PaginatedResult } from 'interfaces/paginated-result.interface';
 import Logging from 'library/Logging';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 
 @Injectable()
-export abstract class AbstractService {
-  constructor(protected readonly repository: Repository<any>) {}
+export abstract class AbstractService<T> {
+  constructor(protected readonly repository: Repository<T>) {}
 
-  async findAll(relations = []): Promise<any[]> {
+  async findAll(relations = []): Promise<T[]> {
     try {
       return this.repository.find({ relations });
     } catch (error) {
@@ -22,7 +22,7 @@ export abstract class AbstractService {
     }
   }
 
-  async findBy(condition, relations = []): Promise<any> {
+  async findBy(condition, relations = []): Promise<T> {
     try {
       return this.repository.findOne({
         where: condition,
@@ -36,10 +36,10 @@ export abstract class AbstractService {
     }
   }
 
-  async findById(id: number, relations = []): Promise<any> {
+  async findById(id:number, relations = []): Promise<T> {
     try {
       const element = await this.repository.findOne({
-        where: { id },
+        where: { id } as unknown as FindOptionsWhere<T>,
         relations,
       });
       if (!element) {
@@ -54,7 +54,7 @@ export abstract class AbstractService {
     }
   }
 
-  async remove(id: number): Promise<any> {
+  async remove(id: number): Promise<T> {
     const element = await this.findById(id);
     try {
       return this.repository.remove(element);

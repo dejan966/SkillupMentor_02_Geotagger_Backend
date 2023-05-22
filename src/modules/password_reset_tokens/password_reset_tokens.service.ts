@@ -9,7 +9,7 @@ import { User } from 'entities/user.entity';
 import { Cron } from '@nestjs/schedule';
 
 @Injectable()
-export class PasswordResetTokensService extends AbstractService {
+export class PasswordResetTokensService extends AbstractService<Password_Reset_Token> {
   constructor(
     @InjectRepository(Password_Reset_Token)
     private readonly password_token_repository: Repository<Password_Reset_Token>,

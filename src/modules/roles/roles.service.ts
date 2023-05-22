@@ -12,7 +12,7 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 
 @Injectable()
-export class RolesService extends AbstractService {
+export class RolesService extends AbstractService<Role> {
   constructor(
     @InjectRepository(Role)
     private readonly rolesRepository: Repository<Role>,
