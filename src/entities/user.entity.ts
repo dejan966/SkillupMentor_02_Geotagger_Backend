@@ -27,6 +27,10 @@ export class User extends Base {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column({ nullable: true, default: null })
+  @Exclude()
+  refresh_token: string;
+
   @ManyToOne(() => Role, (role) => role.users, { onDelete: 'SET NULL' })
   role: Role;
 

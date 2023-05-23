@@ -9,11 +9,12 @@ import {
   Res,
   Req,
   UseGuards,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { Public } from 'decorators/public.decorator';
 import { Response } from 'express';
 import { User } from 'entities/user.entity';
-import { RequestWithUser } from 'interfaces/auth.interface';
+import { JwtType, RequestWithUser } from 'interfaces/auth.interface';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -37,10 +38,16 @@ export class AuthController {
   async login(
     @Req() req: RequestWithUser,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<User> {
-    const access_token = await this.authService.generateJwt(req.user);
-    res.cookie('access_token', access_token, { httpOnly: true });
-    return req.user;
+  ): Promise<void> {
+    const access_token = await this.authService.generateToken(req.user, JwtType.ACCESS_TOKEN);
+    const refresh_token = await this.authService.generateToken(req.user, JwtType.REFRESH_TOKEN);
+    try {
+      await this.authService.updateRtHash(req.user.id, refresh_token);
+      res.setHeader('Set-Cookie', [access_token, refresh_token]).json({ ...req.user });
+    } catch (error) {
+      throw new InternalServerErrorException('Something went wrong while setting cookies into response header');
+    }
+    //return req.user;
   }
 
   @Post('signout')
