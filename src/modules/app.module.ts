@@ -39,7 +39,7 @@ imports: [
     }),
     ScheduleModule.forRoot(),
     DatabaseModule,
-    UtilsModule,
+    //UtilsModule,
     AuthModule,
     PasswordResetTokensModule,
     UsersModule,

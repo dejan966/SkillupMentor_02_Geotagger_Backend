@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Guess } from 'entities/guess.entity';
 import { LocationsService } from '../locations/locations.service';
 import { Location } from 'entities/location.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { Location } from 'entities/location.entity';
     TypeOrmModule.forFeature([Location]),
   ],
   controllers: [GuessesController],
-  providers: [GuessesService, LocationsService],
+  providers: [GuessesService, LocationsService, JwtService],
 })
 export class GuessesModule {}
