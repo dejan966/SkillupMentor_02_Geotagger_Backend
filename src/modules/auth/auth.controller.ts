@@ -41,18 +41,18 @@ export class AuthController {
     @Req() req: RequestWithUser,
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
-    const access_token = await this.authService.generateToken(req.user, JwtType.ACCESS_TOKEN);
-    const refresh_token = await this.authService.generateToken(req.user, JwtType.REFRESH_TOKEN);
+    const {user} = req
+    const access_token = await this.authService.generateToken(user, JwtType.ACCESS_TOKEN);
+    const refresh_token = await this.authService.generateToken(user, JwtType.REFRESH_TOKEN);
     
     const access_token_cookie = await this.authService.generateCookie(access_token, CookieType.ACCESS_TOKEN);
     const refresh_token_cookie = await this.authService.generateCookie(refresh_token, CookieType.REFRESH_TOKEN);
     try {
-      await this.authService.updateRtHash(req.user.id, refresh_token);
-      res.setHeader('Set-Cookie', [access_token_cookie, refresh_token_cookie]).json({ ...req.user });
+      await this.authService.updateRtHash(user.id, refresh_token);
+      res.setHeader('Set-Cookie', [access_token_cookie, refresh_token_cookie]).json({ ...user });
     } catch (error) {
       throw new InternalServerErrorException('Something went wrong while setting cookies into response header');
     }
-    //return req.user;
   }
 
   @Post('signout')

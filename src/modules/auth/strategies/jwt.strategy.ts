@@ -20,12 +20,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         },
       ]),
       secretOrKey: configService.get('JWT_SECRET'),
-      ignoreExpiration: false,
+      ignoreExpiration: true,
     });
   }
 
   async validate(payload: TokenPayload): Promise<User> {
-    const user = this.usersService.findById(payload.sub);
+    const user = await this.usersService.findById(payload.sub);
     return user;
   }
 }

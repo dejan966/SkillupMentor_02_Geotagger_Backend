@@ -70,6 +70,13 @@ export class AuthService {
             secret: this.configService.get('JWT_REFRESH_SECRET'),
           });
           break;
+        case JwtType.PASSWORD_TOKEN:
+          token = await this.jwtService.signAsync(payload, {
+            secret: this.configService.get('JWT_REFRESH_SECRET'),
+            expiresIn: '15m'
+          });
+          console.log(token)
+          break;
         default:
           throw new BadRequestException('Access denied');
       }

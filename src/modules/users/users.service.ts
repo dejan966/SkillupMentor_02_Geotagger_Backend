@@ -73,15 +73,19 @@ export class UsersService extends AbstractService<User> {
       );
     }
 
+/*     const password_token = await this.authService.generateToken(
+      user,
+      JwtType.PASSWORD_TOKEN,
+    ); */
     const token = Math.random().toString(36).slice(2, 12);
-    const currDate = new Date();
+/*     const currDate = new Date();
     const token_expiry_date = new Date(currDate.getTime() + 15 * 60000);
 
     await this.passwordResetService.createToken({
       token,
       token_expiry_date,
       user,
-    });
+    }); */
     const response = await this.mailerService.sendMail({
       from: 'Geotagger Support <ultimate24208@gmail.com>',
       to: user.email,
