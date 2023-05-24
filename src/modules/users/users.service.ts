@@ -12,7 +12,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { AbstractService } from 'modules/common/abstract.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { UtilsService } from 'modules/utils/utils.service';
-import { PasswordResetTokensService } from 'modules/password_reset_tokens/password_reset_tokens.service';
 
 @Injectable()
 export class UsersService extends AbstractService<User> {
@@ -21,7 +20,6 @@ export class UsersService extends AbstractService<User> {
     private readonly usersRepository: Repository<User>,
     private readonly mailerService: MailerService,
     private readonly utilsService: UtilsService,
-    private readonly passwordResetService: PasswordResetTokensService
   ) {
     super(usersRepository);
   }
@@ -66,7 +64,8 @@ export class UsersService extends AbstractService<User> {
   }
 
   async sendEmail(user: User) {
-    const userToken = await this.passwordResetService.findByUser(user);
+    //check the status of the password token
+    const userToken = await this.usersRepository.findBy(user);
     if (userToken) {
       throw new BadRequestException(
         'User already requested token for password reset.',

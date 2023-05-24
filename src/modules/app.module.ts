@@ -15,7 +15,6 @@ import { GuessesModule } from './guesses/guesses.module';
 import { configValidationSchema } from 'config/schema.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { RolesModule } from './roles/roles.module';
-import { PasswordResetTokensModule } from './password_reset_tokens/password_reset_tokens.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ScheduleModule } from '@nestjs/schedule';
 import { LoggerMiddleware } from 'middleware/logger.middleware';
@@ -39,7 +38,6 @@ imports: [
     ScheduleModule.forRoot(),
     DatabaseModule,
     AuthModule,
-    PasswordResetTokensModule,
     UsersModule,
     RolesModule,
     LocationsModule,
