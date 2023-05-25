@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
 import Logging from 'library/Logging';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AbstractService } from 'modules/common/abstract.service';
@@ -65,8 +65,8 @@ export class UsersService extends AbstractService<User> {
 
   async sendEmail(user: User) {
     //check the status of the password token
-    const userToken = await this.usersRepository.findBy(user);
-    if (userToken) {
+    const userToken = await this.findBy({password_token: Not(IsNull())});
+    if (!userToken) {
       throw new BadRequestException(
         'User already requested token for password reset.',
       );
@@ -77,14 +77,6 @@ export class UsersService extends AbstractService<User> {
       JwtType.PASSWORD_TOKEN,
     ); */
     const token = Math.random().toString(36).slice(2, 12);
-/*     const currDate = new Date();
-    const token_expiry_date = new Date(currDate.getTime() + 15 * 60000);
-
-    await this.passwordResetService.createToken({
-      token,
-      token_expiry_date,
-      user,
-    }); */
     const response = await this.mailerService.sendMail({
       from: 'Geotagger Support <ultimate24208@gmail.com>',
       to: user.email,
@@ -114,6 +106,7 @@ export class UsersService extends AbstractService<User> {
         );
       user.password = await this.utilsService.hash(updateUserDto.password);
     }
+    user.password_token = null;
     return this.usersRepository.save(user);
   }
 
