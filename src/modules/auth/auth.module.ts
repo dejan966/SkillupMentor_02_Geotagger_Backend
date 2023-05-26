@@ -9,6 +9,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { UtilsService } from 'modules/utils/utils.service';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { PassportModule } from '@nestjs/passport';
+import { UsersService } from 'modules/users/users.service';
 
 @Module({
   imports: [

@@ -38,5 +38,8 @@ export class UpdateUserDto {
   refresh_token?: string
 
   @IsOptional()
+  password_token?: string
+
+  @IsOptional()
   role?: Role;
 }

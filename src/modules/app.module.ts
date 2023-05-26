@@ -16,7 +16,6 @@ import { configValidationSchema } from 'config/schema.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { RolesModule } from './roles/roles.module';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { ScheduleModule } from '@nestjs/schedule';
 import { LoggerMiddleware } from 'middleware/logger.middleware';
 
 @Module({
@@ -35,7 +34,6 @@ imports: [
         }
       }
     }),
-    ScheduleModule.forRoot(),
     DatabaseModule,
     AuthModule,
     UsersModule,

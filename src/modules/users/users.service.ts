@@ -6,18 +6,23 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
 import Logging from 'library/Logging';
-import { IsNull, Not, Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AbstractService } from 'modules/common/abstract.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { UtilsService } from 'modules/utils/utils.service';
+import { JwtType } from 'interfaces/auth.interface';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService extends AbstractService<User> {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private configService: ConfigService,
+    private jwtService: JwtService,
     private readonly mailerService: MailerService,
     private readonly utilsService: UtilsService,
   ) {
@@ -65,24 +70,31 @@ export class UsersService extends AbstractService<User> {
 
   async sendEmail(user: User) {
     //check the status of the password token
-    const userToken = await this.findBy({password_token: Not(IsNull())});
+    const userToken = await this.findBy({
+      password_token: IsNull(),
+      id: user.id,
+    });
+
     if (!userToken) {
       throw new BadRequestException(
         'User already requested token for password reset.',
       );
     }
 
-/*     const password_token = await this.authService.generateToken(
-      user,
-      JwtType.PASSWORD_TOKEN,
-    ); */
-    const token = Math.random().toString(36).slice(2, 12);
+    const type = JwtType.PASSWORD_TOKEN;
+    const token = await this.jwtService.signAsync({sub: user.id, name: user.email, type}, {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+      expiresIn: '15m'
+    });
+
+    await this.update(user.id, {password_token : token})
+
     const response = await this.mailerService.sendMail({
       from: 'Geotagger Support <ultimate24208@gmail.com>',
       to: user.email,
       subject: 'Your password reset token',
       text: `Hi.<p>Your password reset link is: </p><p>It expires in 15 minutes.</p>`,
-      html: `Hi.<p>Your password reset link is: http://localhost:3000/me/update-password?token=${token}.</p><p>It expires in 15 minutes.</p>`,
+      html: `Hi.<p>Your password reset link is <a href="http://localhost:3000/me/update-password?token=${token}">here</a>.</p><p>It expires in 15 minutes.</p>`,
     });
     return response;
   }
@@ -96,11 +108,21 @@ export class UsersService extends AbstractService<User> {
     },
   ): Promise<User> {
     if (updateUserDto.password && updateUserDto.confirm_password) {
-      if (!(await this.utilsService.compareHash(updateUserDto.current_password, user.password)))
+      if (
+        !(await this.utilsService.compareHash(
+          updateUserDto.current_password,
+          user.password,
+        ))
+      )
         throw new BadRequestException('Incorrect current password');
       if (updateUserDto.password !== updateUserDto.confirm_password)
         throw new BadRequestException('Passwords do not match.');
-      if (await this.utilsService.compareHash(updateUserDto.password, user.password))
+      if (
+        await this.utilsService.compareHash(
+          updateUserDto.password,
+          user.password,
+        )
+      )
         throw new BadRequestException(
           'New password cannot be the same as old password.',
         );

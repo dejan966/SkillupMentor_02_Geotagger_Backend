@@ -73,13 +73,13 @@ export class UsersController {
     throw new BadRequestException('File content does not match extension!');
   }
 
-  @Get('/user/:token')
+  @Get(':token')
   @UseGuards(JwtAuthGuard)
   async findByToken(@Param('token') token: string) {
     return this.usersService.findBy({ password_token: token });
   }
 
-  @Get('me/reset-password')
+  @Post('me/reset-password')
   @UseGuards(JwtAuthGuard)
   async checkEmail(@Body() updateUserDto: { email: string }) {
     return this.usersService.checkEmail(updateUserDto.email);

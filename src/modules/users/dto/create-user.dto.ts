@@ -28,6 +28,9 @@ export class CreateUserDto {
 
   @IsOptional()
   refresh_token?: string
+  
+  @IsOptional()
+  password_token?: string
 
   @IsOptional()
   role?: Role;

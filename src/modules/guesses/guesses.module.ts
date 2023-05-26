@@ -13,5 +13,6 @@ import { Location } from 'entities/location.entity';
   ],
   controllers: [GuessesController],
   providers: [GuessesService, LocationsService],
+  exports: [GuessesService]
 })
 export class GuessesModule {}
