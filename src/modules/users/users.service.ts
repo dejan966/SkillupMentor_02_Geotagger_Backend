@@ -87,14 +87,16 @@ export class UsersService extends AbstractService<User> {
       expiresIn: '15m'
     });
 
-    await this.update(user.id, {password_token : token})
+    const hashed = await this.utilsService.hash(token);
+
+    await this.update(user.id, {password_token : hashed})
 
     const response = await this.mailerService.sendMail({
       from: 'Geotagger Support <ultimate24208@gmail.com>',
       to: user.email,
       subject: 'Your password reset token',
       text: `Hi.<p>Your password reset link is: </p><p>It expires in 15 minutes.</p>`,
-      html: `Hi.<p>Your password reset link is <a href="http://localhost:3000/me/update-password?token=${token}">here</a>.</p><p>It expires in 15 minutes.</p>`,
+      html: `Hi.<p>Your password reset link is <a href="http://localhost:3000/me/update-password?token=${hashed}">here</a>.</p><p>It expires in 15 minutes.</p>`,
     });
     return response;
   }
