@@ -1,9 +1,6 @@
-import { BadRequestException, ForbiddenException, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
+import { InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import Logging from 'library/Logging';
-import { UsersService } from 'modules/users/users.service';
 
 export class UtilsService {
   async hash(data: string, salt = 10) {

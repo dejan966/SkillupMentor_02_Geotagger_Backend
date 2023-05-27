@@ -29,11 +29,17 @@ import {
   removeFile,
 } from 'helpers/imageStorage';
 import { join } from 'path';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private configService: ConfigService,
+    private jwtService: JwtService,
+  ) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -73,16 +79,28 @@ export class UsersController {
     throw new BadRequestException('File content does not match extension!');
   }
 
-  @Get(':token')
+  @Get(':id/:token')
   @UseGuards(JwtAuthGuard)
-  async findByToken(@Param('token') token: string) {
-    return this.usersService.findBy({ password_token: token });
-  }
+  async findByToken(
+    @Param('id') user_id: number,
+    @Param('token') token: string,
+  ) {
+    const jwtToken = await this.jwtService.verifyAsync(token, {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+    });
 
-  @Post('me/reset-password')
-  @UseGuards(JwtAuthGuard)
-  async checkEmail(@Body() updateUserDto: { email: string }) {
-    return this.usersService.checkEmail(updateUserDto.email);
+    if (!jwtToken) {
+      return false;
+    }
+
+    const user = await this.usersService.findBy({
+      password_token: token,
+      id: user_id,
+    });
+    if (user) {
+      return true;
+    }
+    return false;
   }
 
   @Get(':id')
@@ -107,6 +125,12 @@ export class UsersController {
     },
   ) {
     return this.usersService.updatePassword(user, updateUserDto);
+  }
+
+  @Post('me/reset-password')
+  @UseGuards(JwtAuthGuard)
+  async checkEmail(@Body() updateUserDto: { email: string }) {
+    return this.usersService.checkEmail(updateUserDto.email);
   }
 
   @Delete(':id')

@@ -15,6 +15,7 @@ import { UtilsService } from 'modules/utils/utils.service';
 import { JwtType } from 'interfaces/auth.interface';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { IJwtPayload } from 'interfaces/jwt-payload.interface';
 
 @Injectable()
 export class UsersService extends AbstractService<User> {
@@ -69,27 +70,29 @@ export class UsersService extends AbstractService<User> {
   }
 
   async sendEmail(user: User) {
-    //check the status of the password token
-    const userToken = await this.findBy({
-      password_token: IsNull(),
-      id: user.id,
-    });
+    const userInfo = await this.findById(user.id);
 
-    if (!userToken) {
-      throw new BadRequestException(
-        'User already requested token for password reset.',
-      );
+    const decoded = this.jwtService.decode(userInfo.password_token) as string;
+    const updatedJwtPayload: IJwtPayload = decoded as unknown as IJwtPayload;
+    const expires = new Date(updatedJwtPayload.exp).toLocaleString();
+    const curr = new Date().toLocaleString();
+
+    if(curr < expires){
+      throw new BadRequestException('User already requested the token.')
     }
 
     const type = JwtType.PASSWORD_TOKEN;
-    const token = await this.jwtService.signAsync({sub: user.id, name: user.email, type}, {
-      secret: this.configService.get('JWT_REFRESH_SECRET'),
-      expiresIn: '15m'
-    });
+    const token = await this.jwtService.signAsync(
+      { sub: user.id, name: user.email, type },
+      {
+        secret: this.configService.get('JWT_REFRESH_SECRET'),
+        expiresIn: '15m',
+      },
+    );
 
     const hashed = await this.utilsService.hash(token);
 
-    await this.update(user.id, {password_token : hashed})
+    await this.update(user.id, { password_token: token });
 
     const response = await this.mailerService.sendMail({
       from: 'Geotagger Support <ultimate24208@gmail.com>',
