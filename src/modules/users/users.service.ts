@@ -46,22 +46,6 @@ export class UsersService extends AbstractService<User> {
     }
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const { avatar, password, confirm_password, ...rest } = updateUserDto;
-    const user = await this.findById(id);
-    try {
-      for (const key in user) {
-        if (rest[key]) user[key] = rest[key];
-      }
-      return this.usersRepository.save(user);
-    } catch (error) {
-      Logging.log(error);
-      throw new NotFoundException(
-        'Something went wrong while updating the data.',
-      );
-    }
-  }
-
   async checkToken(user: User, hashed_token: string) {
     if (
       await this.utilsService.compareHash(user.password_token, hashed_token)

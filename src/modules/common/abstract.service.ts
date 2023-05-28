@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PaginatedResult } from 'interfaces/paginated-result.interface';
 import Logging from 'library/Logging';
@@ -10,6 +11,21 @@ import { FindOptionsWhere, Repository } from 'typeorm';
 @Injectable()
 export abstract class AbstractService<T> {
   constructor(protected readonly repository: Repository<T>) {}
+
+  async update(id: number, updateDataDto): Promise<T> {
+    const data = await this.findById(id);
+    try {
+      for (const key in data) {
+        if (updateDataDto[key] !== undefined) data[key] = updateDataDto[key];
+      }
+      return this.repository.save(data);
+    } catch (error) {
+      Logging.log(error);
+      throw new NotFoundException(
+        'Something went wrong while updating the data.',
+      );
+    }
+  }
 
   async findAll(relations = []): Promise<T[]> {
     try {
