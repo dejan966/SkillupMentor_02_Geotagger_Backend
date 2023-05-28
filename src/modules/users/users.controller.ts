@@ -31,6 +31,7 @@ import {
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { IJwtPayload } from 'interfaces/jwt-payload.interface';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -85,6 +86,15 @@ export class UsersController {
     @Param('id') user_id: number,
     @Param('token') token: string,
   ) {
+/*     const decoded = this.jwtService.decode(token);
+    const updatedJwtPayload: IJwtPayload = decoded as unknown as IJwtPayload;
+    const expires = new Date(updatedJwtPayload.exp).toLocaleString();
+    const curr = new Date().toLocaleString();
+
+    if(curr > expires){
+      return false;
+    } */
+
     const jwtToken = await this.jwtService.verifyAsync(token, {
       secret: this.configService.get('JWT_REFRESH_SECRET'),
     });

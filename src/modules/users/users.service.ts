@@ -70,15 +70,17 @@ export class UsersService extends AbstractService<User> {
   }
 
   async sendEmail(user: User) {
-    const userInfo = await this.findById(user.id);
-
-    const decoded = this.jwtService.decode(userInfo.password_token) as string;
-    const updatedJwtPayload: IJwtPayload = decoded as unknown as IJwtPayload;
-    const expires = new Date(updatedJwtPayload.exp).toLocaleString();
-    const curr = new Date().toLocaleString();
-
-    if(curr < expires){
-      throw new BadRequestException('User already requested the token.')
+    const { password_token } = user;
+    
+    if(password_token){
+      const decoded = this.jwtService.decode(password_token);
+      const updatedJwtPayload: IJwtPayload = decoded as IJwtPayload;
+      const expires = new Date(updatedJwtPayload.exp).toLocaleString();
+      const curr = new Date().toLocaleString();
+  
+      if (curr > expires) {
+        throw new BadRequestException('User already requested the token.');
+      }
     }
 
     const type = JwtType.PASSWORD_TOKEN;
