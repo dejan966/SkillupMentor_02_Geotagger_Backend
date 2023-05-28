@@ -32,6 +32,7 @@ import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { IJwtPayload } from 'interfaces/jwt-payload.interface';
+import { UtilsService } from 'modules/utils/utils.service';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -40,6 +41,7 @@ export class UsersController {
     private readonly usersService: UsersService,
     private configService: ConfigService,
     private jwtService: JwtService,
+    private utilsService: UtilsService,
   ) {}
 
   @Post()
@@ -80,37 +82,14 @@ export class UsersController {
     throw new BadRequestException('File content does not match extension!');
   }
 
-  @Get(':id/:token')
+  @Get(':id/:token(*)')
   @UseGuards(JwtAuthGuard)
-  async findByToken(
+  async checkToken(
     @Param('id') user_id: number,
-    @Param('token') token: string,
+    @Param('token') hashed_token: string,
   ) {
-/*     const decoded = this.jwtService.decode(token);
-    const updatedJwtPayload: IJwtPayload = decoded as unknown as IJwtPayload;
-    const expires = new Date(updatedJwtPayload.exp).toLocaleString();
-    const curr = new Date().toLocaleString();
-
-    if(curr > expires){
-      return false;
-    } */
-
-    const jwtToken = await this.jwtService.verifyAsync(token, {
-      secret: this.configService.get('JWT_REFRESH_SECRET'),
-    });
-
-    if (!jwtToken) {
-      return false;
-    }
-
-    const user = await this.usersService.findBy({
-      password_token: token,
-      id: user_id,
-    });
-    if (user) {
-      return true;
-    }
-    return false;
+    const user = await this.usersService.findById(user_id);
+    return this.usersService.checkToken(user, hashed_token);
   }
 
   @Get(':id')

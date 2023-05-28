@@ -62,6 +62,22 @@ export class UsersService extends AbstractService<User> {
     }
   }
 
+  async checkToken(user: User, hashed_token: string) {
+    if (
+      await this.utilsService.compareHash(user.password_token, hashed_token)
+    ) {
+      const decoded = this.jwtService.decode(user.password_token);
+      const updatedJwtPayload: IJwtPayload = decoded as IJwtPayload;
+      const expires = new Date(updatedJwtPayload.exp * 1000).toLocaleString();
+      const curr = new Date().toLocaleString();
+      if (user && curr < expires) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   async checkEmail(userEmail: string) {
     const user = await this.findBy({ email: userEmail });
     if (user) {
@@ -71,14 +87,13 @@ export class UsersService extends AbstractService<User> {
 
   async sendEmail(user: User) {
     const { password_token } = user;
-    
-    if(password_token){
+
+    if (password_token) {
       const decoded = this.jwtService.decode(password_token);
       const updatedJwtPayload: IJwtPayload = decoded as IJwtPayload;
-      const expires = new Date(updatedJwtPayload.exp).toLocaleString();
+      const expires = new Date(updatedJwtPayload.exp * 1000).toLocaleString();
       const curr = new Date().toLocaleString();
-  
-      if (curr > expires) {
+      if (curr < expires) {
         throw new BadRequestException('User already requested the token.');
       }
     }
@@ -88,7 +103,7 @@ export class UsersService extends AbstractService<User> {
       { sub: user.id, name: user.email, type },
       {
         secret: this.configService.get('JWT_REFRESH_SECRET'),
-        expiresIn: '15m',
+        expiresIn: '900s',
       },
     );
 
