@@ -6,22 +6,26 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'entities/user.entity';
 import Logging from 'library/Logging';
-import { Repository } from 'typeorm';
-import { compareHash, hash } from 'utils/bcrypt';
+import { IsNull, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AbstractService } from 'modules/common/abstract.service';
-import { JwtService } from '@nestjs/jwt';
-import { PasswordResetTokensService } from 'modules/password_reset_tokens/password_reset_tokens.service';
 import { MailerService } from '@nestjs-modules/mailer';
+import { UtilsService } from 'modules/utils/utils.service';
+import { JwtType } from 'interfaces/auth.interface';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { IJwtPayload } from 'interfaces/jwt-payload.interface';
 
 @Injectable()
-export class UsersService extends AbstractService {
+export class UsersService extends AbstractService<User> {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-    private readonly password_reset_tokens_service: PasswordResetTokensService,
+    private configService: ConfigService,
+    private jwtService: JwtService,
     private readonly mailerService: MailerService,
+    private readonly utilsService: UtilsService,
   ) {
     super(usersRepository);
   }
@@ -42,20 +46,20 @@ export class UsersService extends AbstractService {
     }
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const { avatar, password, confirm_password, ...rest } = updateUserDto;
-    const user = await this.findById(id);
-    try {
-      for (const key in user) {
-        if (rest[key]) user[key] = rest[key];
+  async checkToken(user: User, hashed_token: string) {
+    if (
+      await this.utilsService.compareHash(user.password_token, hashed_token)
+    ) {
+      const decoded = this.jwtService.decode(user.password_token);
+      const updatedJwtPayload: IJwtPayload = decoded as IJwtPayload;
+      const expires = new Date(updatedJwtPayload.exp * 1000).toLocaleString();
+      const curr = new Date().toLocaleString();
+      if (user && curr < expires) {
+        return true;
       }
-      return this.usersRepository.save(user);
-    } catch (error) {
-      Logging.log(error);
-      throw new NotFoundException(
-        'Something went wrong while updating the data.',
-      );
     }
+
+    return false;
   }
 
   async checkEmail(userEmail: string) {
@@ -66,28 +70,37 @@ export class UsersService extends AbstractService {
   }
 
   async sendEmail(user: User) {
-    const userToken = await this.password_reset_tokens_service.findByUser(user);
-    if (userToken) {
-      throw new BadRequestException(
-        'User already requested token for password reset.',
-      );
+    const { password_token } = user;
+
+    if (password_token) {
+      const decoded = this.jwtService.decode(password_token);
+      const updatedJwtPayload: IJwtPayload = decoded as IJwtPayload;
+      const expires = new Date(updatedJwtPayload.exp * 1000).toLocaleString();
+      const curr = new Date().toLocaleString();
+      if (curr < expires) {
+        throw new BadRequestException('User already requested the token.');
+      }
     }
 
-    const token = Math.random().toString(36).slice(2, 12);
-    const currDate = new Date();
-    const token_expiry_date = new Date(currDate.getTime() + 15 * 60000);
+    const type = JwtType.PASSWORD_TOKEN;
+    const token = await this.jwtService.signAsync(
+      { sub: user.id, name: user.email, type },
+      {
+        secret: this.configService.get('JWT_REFRESH_SECRET'),
+        expiresIn: '900s',
+      },
+    );
 
-    await this.password_reset_tokens_service.createToken({
-      token,
-      token_expiry_date,
-      user,
-    });
+    const hashed = await this.utilsService.hash(token);
+
+    await this.update(user.id, { password_token: token });
+
     const response = await this.mailerService.sendMail({
       from: 'Geotagger Support <ultimate24208@gmail.com>',
       to: user.email,
       subject: 'Your password reset token',
       text: `Hi.<p>Your password reset link is: </p><p>It expires in 15 minutes.</p>`,
-      html: `Hi.<p>Your password reset link is: http://localhost:3000/me/update-password?token=${token}.</p><p>It expires in 15 minutes.</p>`,
+      html: `Hi.<p>Your password reset link is <a href="http://localhost:3000/me/update-password?token=${hashed}">here</a>.</p><p>It expires in 15 minutes.</p>`,
     });
     return response;
   }
@@ -101,16 +114,27 @@ export class UsersService extends AbstractService {
     },
   ): Promise<User> {
     if (updateUserDto.password && updateUserDto.confirm_password) {
-      if (!(await compareHash(updateUserDto.current_password, user.password)))
+      if (
+        !(await this.utilsService.compareHash(
+          updateUserDto.current_password,
+          user.password,
+        ))
+      )
         throw new BadRequestException('Incorrect current password');
       if (updateUserDto.password !== updateUserDto.confirm_password)
         throw new BadRequestException('Passwords do not match.');
-      if (await compareHash(updateUserDto.password, user.password))
+      if (
+        await this.utilsService.compareHash(
+          updateUserDto.password,
+          user.password,
+        )
+      )
         throw new BadRequestException(
           'New password cannot be the same as old password.',
         );
-      user.password = await hash(updateUserDto.password);
+      user.password = await this.utilsService.hash(updateUserDto.password);
     }
+    user.password_token = null;
     return this.usersRepository.save(user);
   }
 

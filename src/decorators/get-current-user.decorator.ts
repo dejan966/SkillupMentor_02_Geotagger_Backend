@@ -1,7 +1,4 @@
-import { createParamDecorator, ExecutionContext, Inject } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import Logging from 'library/Logging';
-import { UsersService } from 'modules/users/users.service';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const GetCurrentUser = createParamDecorator(
   (_: undefined, context: ExecutionContext) => {

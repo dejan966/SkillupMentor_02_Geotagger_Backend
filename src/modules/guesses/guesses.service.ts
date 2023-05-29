@@ -12,11 +12,10 @@ import { Repository } from 'typeorm';
 import { AbstractService } from '../common/abstract.service';
 import { LocationsService } from '../locations/locations.service';
 import { CreateGuessDto } from './dto/create-guess.dto';
-import { UpdateGuessDto } from './dto/update-guess.dto';
 import { PaginatedResult } from 'interfaces/paginated-result.interface';
 
 @Injectable()
-export class GuessesService extends AbstractService {
+export class GuessesService extends AbstractService<Guess> {
   constructor(
     @InjectRepository(Guess)
     private readonly guessesRepository: Repository<Guess>,
@@ -48,7 +47,7 @@ export class GuessesService extends AbstractService {
 
   async findByLocation(locationId: number, user: User) {
     return this.guessesRepository.findOne({
-      where: { user, location: { id: locationId } },
+      where: { user: { id: user.id }, location: { id: locationId } },
       relations: ['location', 'user'],
     });
   }
@@ -59,21 +58,6 @@ export class GuessesService extends AbstractService {
       relations: ['location', 'user'],
       order: { errorDistance: 'ASC' },
     });
-  }
-
-  async update(id: number, updateGuessDto: UpdateGuessDto) {
-    const guess = await this.findById(id);
-    try {
-      for (const key in guess) {
-        if (updateGuessDto[key] !== undefined) guess[key] = updateGuessDto[key];
-      }
-      return this.guessesRepository.save(guess);
-    } catch (error) {
-      Logging.log(error);
-      throw new NotFoundException(
-        'Something went wrong while updating the data.',
-      );
-    }
   }
 
   async paginatePersonalBest(page = 1, user: User): Promise<PaginatedResult> {

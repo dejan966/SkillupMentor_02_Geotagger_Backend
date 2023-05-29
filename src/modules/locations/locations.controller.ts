@@ -20,10 +20,15 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from 'entities/user.entity';
-import { saveLocationImageToStorage, isFileExtensionSafe, removeFile } from 'helpers/imageStorage';
+import {
+  saveLocationImageToStorage,
+  isFileExtensionSafe,
+  removeFile,
+} from 'helpers/imageStorage';
 import { join } from 'path';
 import { GetCurrentUser } from 'decorators/get-current-user.decorator';
 import { PaginatedResult } from 'interfaces/paginated-result.interface';
+import { UserGuard } from 'modules/auth/guards/user.guard';
 
 @Controller('locations')
 export class LocationsController {
@@ -31,16 +36,24 @@ export class LocationsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async create(@Body() createLocationDto: CreateLocationDto, @GetCurrentUser() user: User) {
+  async create(
+    @Body() createLocationDto: CreateLocationDto,
+    @GetCurrentUser() user: User,
+  ) {
     return this.locationsService.create(createLocationDto, user);
   }
 
   @Post('upload/:id')
   @UseInterceptors(FileInterceptor('image_url', saveLocationImageToStorage))
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
-  async uploadImage(@UploadedFile() file: Express.Multer.File, @Param('id') location_id: number): Promise<User> {
+  async uploadImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('id') location_id: number,
+  ) {
     const filename = file?.filename;
-    if (!filename) throw new BadRequestException('File must be a png, jpg/jpeg');
+    if (!filename)
+      throw new BadRequestException('File must be a png, jpg/jpeg');
     const imagesFolderPath = join(process.cwd(), 'uploads/locations');
     const fullImagePath = join(imagesFolderPath + '/' + file.filename);
     if (await isFileExtensionSafe(fullImagePath)) {
@@ -51,14 +64,14 @@ export class LocationsController {
   }
 
   @Get()
-  async findAll(@Query('page') page: number):Promise<PaginatedResult> {
+  async findAll(@Query('page') page: number): Promise<PaginatedResult> {
     return this.locationsService.paginate(page, ['user']);
   }
 
   @Get('picture')
   @UseGuards(JwtAuthGuard)
   async findByPicture(pic: string) {
-    return this.locationsService.findBy(pic);
+    return this.locationsService.findBy({ image_url: pic });
   }
 
   @Get(':id')
@@ -74,6 +87,7 @@ export class LocationsController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, UserGuard)
   async update(
     @Param('id') id: number,
     @Body() updateLocationDto: UpdateLocationDto,
@@ -82,7 +96,7 @@ export class LocationsController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, UserGuard)
   async remove(@Param('id') id: number) {
     return this.locationsService.remove(id);
   }

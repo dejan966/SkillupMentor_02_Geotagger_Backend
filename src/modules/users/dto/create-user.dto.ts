@@ -27,5 +27,11 @@ export class CreateUserDto {
   confirm_password: string;
 
   @IsOptional()
+  refresh_token?: string
+  
+  @IsOptional()
+  password_token?: string
+
+  @IsOptional()
   role?: Role;
 }

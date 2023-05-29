@@ -23,13 +23,26 @@ import { JwtAuthGuard } from 'modules/auth/guards/jwt.guard';
 import { GetCurrentUser } from 'decorators/get-current-user.decorator';
 import { User } from 'entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { saveAvatarToStorage, isFileExtensionSafe, removeFile } from 'helpers/imageStorage';
+import {
+  saveAvatarToStorage,
+  isFileExtensionSafe,
+  removeFile,
+} from 'helpers/imageStorage';
 import { join } from 'path';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { IJwtPayload } from 'interfaces/jwt-payload.interface';
+import { UtilsService } from 'modules/utils/utils.service';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private configService: ConfigService,
+    private jwtService: JwtService,
+    private utilsService: UtilsService,
+  ) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -45,16 +58,20 @@ export class UsersController {
 
   @Get()
   async findAll() {
-    return this.usersService.findAll(['role', 'logs.action', 'logs.component']);
+    return this.usersService.findAll(['role', 'locations', 'guesses']);
   }
 
   @Post('upload/:id')
   @UseInterceptors(FileInterceptor('avatar', saveAvatarToStorage))
   @HttpCode(HttpStatus.CREATED)
-  async upload(@UploadedFile() file: Express.Multer.File, @Param('id') id: number): Promise<User> {
+  async upload(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('id') id: number,
+  ): Promise<User> {
     const filename = file?.filename;
 
-    if (!filename) throw new BadRequestException('File must be a png, jpg/jpeg');
+    if (!filename)
+      throw new BadRequestException('File must be a png, jpg/jpeg');
 
     const imagesFolderPath = join(process.cwd(), 'uploads/avatars');
     const fullImagePath = join(imagesFolderPath + '/' + file.filename);
@@ -65,19 +82,19 @@ export class UsersController {
     throw new BadRequestException('File content does not match extension!');
   }
 
-  @Get('me/reset-password')
+  @Get(':id/:token(*)')
   @UseGuards(JwtAuthGuard)
-  async checkEmail(@Body() updateUserDto: { email: string; }){
-    return this.usersService.checkEmail(updateUserDto.email);
+  async checkToken(
+    @Param('id') user_id: number,
+    @Param('token') hashed_token: string,
+  ) {
+    const user = await this.usersService.findById(user_id);
+    return this.usersService.checkToken(user, hashed_token);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.usersService.findById(id, [
-      'role',
-      'logs.action',
-      'logs.component',
-    ]);
+    return this.usersService.findById(id, ['role', 'locations', 'guesses']);
   }
 
   @Patch(':id')
@@ -87,8 +104,22 @@ export class UsersController {
 
   @Patch('/me/update-password')
   @UseGuards(JwtAuthGuard)
-  async updatePassword(@GetCurrentUser() user: User, @Body() updateUserDto: { current_password: string; password: string; confirm_password: string }) {
+  async updatePassword(
+    @GetCurrentUser() user: User,
+    @Body()
+    updateUserDto: {
+      current_password: string;
+      password: string;
+      confirm_password: string;
+    },
+  ) {
     return this.usersService.updatePassword(user, updateUserDto);
+  }
+
+  @Post('me/reset-password')
+  @UseGuards(JwtAuthGuard)
+  async checkEmail(@Body() updateUserDto: { email: string }) {
+    return this.usersService.checkEmail(updateUserDto.email);
   }
 
   @Delete(':id')

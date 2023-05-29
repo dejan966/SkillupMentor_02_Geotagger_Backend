@@ -5,16 +5,14 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne
+  ManyToOne,
 } from 'typeorm';
 import { Guess } from './guess.entity';
 import { User } from './user.entity';
+import { Base } from './base.entity';
 
 @Entity()
-export class Location {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Location extends Base {
   @Column({ nullable: true })
   name: string;
 
@@ -29,12 +27,6 @@ export class Location {
 
   @ManyToOne(() => User, (user) => user.locations, { onDelete: 'SET NULL' })
   user: User;
-
-  @CreateDateColumn()
-  created_at: string;
-
-  @UpdateDateColumn()
-  updated_at: string;
 
   @OneToMany(() => Guess, (guess) => guess.location)
   guesses: Guess[];
