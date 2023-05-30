@@ -7,7 +7,6 @@ export class UserGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const { user, params } = context.switchToHttp().getRequest();
-    console.log(user)
     for (const iterator of user.locations) {
       if (iterator.id == params.id) return true;
     }

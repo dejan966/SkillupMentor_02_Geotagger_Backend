@@ -35,8 +35,8 @@ imports: [
       }
     }),
     DatabaseModule,
-    AuthModule,
     UsersModule,
+    AuthModule,
     RolesModule,
     LocationsModule,
     GuessesModule,

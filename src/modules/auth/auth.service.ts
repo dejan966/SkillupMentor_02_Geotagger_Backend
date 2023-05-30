@@ -75,7 +75,6 @@ export class AuthService {
             secret: this.configService.get('JWT_REFRESH_SECRET'),
             expiresIn: '15m'
           });
-          console.log(token)
           break;
         default:
           throw new BadRequestException('Access denied');
@@ -153,7 +152,7 @@ export class AuthService {
   }
 
   async getUserIfTokenMatches(refreshToken: string, userId: number) {
-    const user = await this.usersService.findById(userId);
+    const user = await this.usersService.findById(userId, ['guesses', 'locations']);
     const isRefreshTokenMatching = await this.utilsService.compareHash(refreshToken, user.refresh_token);
     if (isRefreshTokenMatching) {
       return {

@@ -51,7 +51,6 @@ export class UsersController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
   async getCurrentUser(@GetCurrentUser() user: User) {
     return user;
   }

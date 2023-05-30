@@ -34,14 +34,15 @@ export class AuthController {
   }
 
   @Public()
-  @UseGuards(LocalAuthGuard)
   @Post('login')
+  @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   async login(
     @Req() req: RequestWithUser,
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
     const {user} = req
+    
     const access_token = await this.authService.generateToken(user, JwtType.ACCESS_TOKEN);
     const refresh_token = await this.authService.generateToken(user, JwtType.REFRESH_TOKEN);
     

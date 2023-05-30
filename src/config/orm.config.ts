@@ -15,5 +15,5 @@ export const ORMConfig = async (
   database: configService.get('DATABASE_NAME'),
   entities: ['dist/entities/*{ts,js}'],
   autoLoadEntities: true,
-  synchronize: true,
+  synchronize: true, // remove in production
 });
