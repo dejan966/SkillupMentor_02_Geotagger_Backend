@@ -27,7 +27,6 @@ import {
 } from 'helpers/imageStorage';
 import { join } from 'path';
 import { GetCurrentUser } from 'decorators/get-current-user.decorator';
-import { PaginatedResult } from 'interfaces/paginated-result.interface';
 import { UserGuard } from 'modules/auth/guards/user.guard';
 
 @Controller('locations')
@@ -64,8 +63,19 @@ export class LocationsController {
   }
 
   @Get()
-  async findAll(@Query('page') page: number): Promise<PaginatedResult> {
+  async findAll(@Query('page') page: number) {
     return this.locationsService.paginate(page, ['user']);
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  async findCurrUserLocations(
+    @Query('page') page: number,
+    @GetCurrentUser() user: User,
+  ) {
+    return this.locationsService.paginateCondition(page, ['guesses', 'user'], {
+      user: { id: user.id },
+    });
   }
 
   @Get('picture')
@@ -78,12 +88,6 @@ export class LocationsController {
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: number) {
     return this.locationsService.findById(id, ['guesses', 'user']);
-  }
-
-  @Get('user/:id')
-  @UseGuards(JwtAuthGuard)
-  async findCurrUserLocations(@Param('id') userId: number) {
-    return this.locationsService.findCurrUserLocations(userId);
   }
 
   @Patch(':id')

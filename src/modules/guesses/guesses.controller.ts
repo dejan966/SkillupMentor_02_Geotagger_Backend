@@ -36,8 +36,13 @@ export class GuessesController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async findPersonalBest(@Query('page') page: number, @GetCurrentUser() user:User) {
-    return this.guessesService.paginatePersonalBest(page, user);
+  async findPersonalBest(
+    @Query('page') page: number,
+    @GetCurrentUser() user: User,
+  ) {
+    return this.guessesService.paginateCondition(page, ['location', 'user'], {
+      user: { id: user.id },
+    });
   }
 
   @Get('location/:id')

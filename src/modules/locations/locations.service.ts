@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Location } from 'entities/location.entity';
 import { Repository } from 'typeorm';
@@ -15,16 +20,12 @@ export class LocationsService extends AbstractService<Location> {
     super(locationsRepository);
   }
 
-  async create(createLocationDto: CreateLocationDto, user:User) {
+  async create(createLocationDto: CreateLocationDto, user: User) {
     const newLocation = this.locationsRepository.create({
       ...createLocationDto,
-      user
+      user,
     });
     return this.locationsRepository.save(newLocation);
-  }
-
-  async findCurrUserLocations(id:number){
-    return this.locationsRepository.find({where:{user:{id}}, relations:['guesses', 'user']});
   }
 
   async updateLocationImageId(id: number, location_img: string) {

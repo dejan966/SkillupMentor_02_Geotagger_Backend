@@ -106,4 +106,30 @@ export abstract class AbstractService<T> {
       );
     }
   }
+  
+  async paginateCondition(page = 1, relations = [], condition): Promise<PaginatedResult> {
+    const take = 9;
+    try {
+      const [data, total] = await this.repository.findAndCount({
+        where: condition,
+        take,
+        skip: (page - 1) * take,
+        relations,
+      });
+
+      return {
+        data: data,
+        meta: {
+          total,
+          page,
+          last_page: Math.ceil(total / take),
+        },
+      };
+    } catch (error) {
+      Logging.error(error);
+      throw new InternalServerErrorException(
+        'Something went wrong while searching for paginated elements.',
+      );
+    }
+  }
 }
