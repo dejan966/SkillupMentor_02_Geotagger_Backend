@@ -52,7 +52,7 @@ export abstract class AbstractService<T> {
     }
   }
 
-  async findById(id:number, relations = []): Promise<T> {
+  async findById(id: number, relations = []): Promise<T> {
     try {
       const element = await this.repository.findOne({
         where: { id } as unknown as FindOptionsWhere<T>,
@@ -106,8 +106,12 @@ export abstract class AbstractService<T> {
       );
     }
   }
-  
-  async paginateCondition(page = 1, relations = [], condition): Promise<PaginatedResult> {
+
+  async paginateCondition(
+    page = 1,
+    relations = [],
+    condition,
+  ): Promise<PaginatedResult> {
     const take = 9;
     try {
       const [data, total] = await this.repository.findAndCount({

@@ -94,7 +94,6 @@ export class UsersService extends AbstractService<User> {
     const hashed = await this.utilsService.hash(token);
 
     await this.update(user.id, { password_token: token });
-
     const response = await this.mailerService.sendMail({
       from: 'Geotagger Support <ultimate24208@gmail.com>',
       to: user.email,

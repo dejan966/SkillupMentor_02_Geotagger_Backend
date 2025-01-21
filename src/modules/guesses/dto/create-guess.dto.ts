@@ -8,5 +8,5 @@ export class CreateGuessDto {
   longitude: number;
 
   @IsNotEmpty()
-  errorDistance:number;
+  errorDistance: number;
 }

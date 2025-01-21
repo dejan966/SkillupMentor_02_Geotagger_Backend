@@ -27,7 +27,13 @@ import { UsersService } from 'modules/users/users.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UtilsService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
+  providers: [
+    AuthService,
+    UtilsService,
+    LocalStrategy,
+    JwtStrategy,
+    JwtRefreshStrategy,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

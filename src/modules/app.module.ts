@@ -19,20 +19,20 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { LoggerMiddleware } from 'middleware/logger.middleware';
 
 @Module({
-imports: [
+  imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [`.env.${process.env.STAGE}`],
       validationSchema: configValidationSchema,
     }),
     MailerModule.forRoot({
-      transport:{
-        host:'smtp.sendgrid.net',
-        auth:{
-          user:process.env.SMTP_USER,
-          pass:process.env.SMTP_PASS
-        }
-      }
+      transport: {
+        host: 'smtp.sendgrid.net',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      },
     }),
     DatabaseModule,
     UsersModule,
@@ -51,7 +51,9 @@ imports: [
   ],
 })
 export class AppModule {
-    configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

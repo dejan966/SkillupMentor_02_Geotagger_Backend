@@ -53,7 +53,9 @@ export class AuthService {
     try {
       await this.usersService.update(userId, { refresh_token: rt });
     } catch (error) {
-      throw new InternalServerErrorException('Something went wrong while updating user refresh token');
+      throw new InternalServerErrorException(
+        'Something went wrong while updating user refresh token',
+      );
     }
   }
 
@@ -73,7 +75,7 @@ export class AuthService {
         case JwtType.PASSWORD_TOKEN:
           token = await this.jwtService.signAsync(payload, {
             secret: this.configService.get('JWT_REFRESH_SECRET'),
-            expiresIn: '15m'
+            expiresIn: '15m',
           });
           break;
         default:
@@ -93,10 +95,14 @@ export class AuthService {
       let cookie: string;
       switch (type) {
         case CookieType.ACCESS_TOKEN:
-          cookie = `access_token=${token}; HttpOnly; Path =/; Max-Age=${this.configService.get('JWT_SECRET_EXPIRES')}; SameSite:strict`;
+          cookie = `access_token=${token}; HttpOnly; Path =/; Max-Age=${this.configService.get(
+            'JWT_SECRET_EXPIRES',
+          )}; SameSite:strict`;
           break;
         case CookieType.REFRESH_TOKEN:
-          cookie = `refresh_token=${token}; HttpOnly; Path =/; Max-Age=${this.configService.get('JWT_REFRESH_SECRET_EXPIRES')}; SameSite:strict`;
+          cookie = `refresh_token=${token}; HttpOnly; Path =/; Max-Age=${this.configService.get(
+            'JWT_REFRESH_SECRET_EXPIRES',
+          )}; SameSite:strict`;
           break;
         default:
           throw new BadRequestException('Access denied');
@@ -107,12 +113,16 @@ export class AuthService {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
         throw new BadRequestException('User with that email already exists.');
       }
-      throw new InternalServerErrorException('Something went wrong while generating a new cookie.');
+      throw new InternalServerErrorException(
+        'Something went wrong while generating a new cookie.',
+      );
     }
   }
 
   async refreshTokens(req: Request): Promise<User> {
-    const user = await this.usersService.findBy({ refresh_token: req.cookies.refresh_token });
+    const user = await this.usersService.findBy({
+      refresh_token: req.cookies.refresh_token,
+    });
     if (!user) {
       throw new ForbiddenException();
     }
@@ -122,7 +132,9 @@ export class AuthService {
       });
     } catch (error) {
       Logging.error(error);
-      throw new UnauthorizedException('Something went wrong while refreshing tokens');
+      throw new UnauthorizedException(
+        'Something went wrong while refreshing tokens',
+      );
     }
     const token = await this.generateToken(user, JwtType.ACCESS_TOKEN);
     const cookie = await this.generateCookie(token, CookieType.ACCESS_TOKEN);
@@ -131,7 +143,9 @@ export class AuthService {
       req.res.setHeader('Set-Cookie', cookie);
     } catch (error) {
       Logging.error(error);
-      throw new InternalServerErrorException('Something went wrong while setting cookies into the response header');
+      throw new InternalServerErrorException(
+        'Something went wrong while setting cookies into the response header',
+      );
     }
     return user;
   }
@@ -143,17 +157,28 @@ export class AuthService {
       res.setHeader('Set-Cookie', this.getCookiesForSignOut()).sendStatus(200);
     } catch (error) {
       Logging.error(error);
-      throw new InternalServerErrorException('Something went wrong while setting cookies into response header');
+      throw new InternalServerErrorException(
+        'Something went wrong while setting cookies into response header',
+      );
     }
   }
 
   getCookiesForSignOut(): string[] {
-    return ['access_token=; HttpOnly; Path =/; Max-Age=0;', 'refresh_token=; HttpOnly; Path =/; Max-Age=0'];
+    return [
+      'access_token=; HttpOnly; Path =/; Max-Age=0;',
+      'refresh_token=; HttpOnly; Path =/; Max-Age=0',
+    ];
   }
 
   async getUserIfTokenMatches(refreshToken: string, userId: number) {
-    const user = await this.usersService.findById(userId, ['guesses', 'locations']);
-    const isRefreshTokenMatching = await this.utilsService.compareHash(refreshToken, user.refresh_token);
+    const user = await this.usersService.findById(userId, [
+      'guesses',
+      'locations',
+    ]);
+    const isRefreshTokenMatching = await this.utilsService.compareHash(
+      refreshToken,
+      user.refresh_token,
+    );
     if (isRefreshTokenMatching) {
       return {
         id: user.id,

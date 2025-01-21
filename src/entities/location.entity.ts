@@ -1,10 +1,7 @@
 import {
   Entity,
   Column,
-  PrimaryGeneratedColumn,
   OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
   ManyToOne,
 } from 'typeorm';
 import { Guess } from './guess.entity';

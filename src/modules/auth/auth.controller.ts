@@ -14,7 +14,11 @@ import {
 import { Public } from 'decorators/public.decorator';
 import { Response } from 'express';
 import { User } from 'entities/user.entity';
-import { CookieType, JwtType, RequestWithUser } from 'interfaces/auth.interface';
+import {
+  CookieType,
+  JwtType,
+  RequestWithUser,
+} from 'interfaces/auth.interface';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -41,25 +45,44 @@ export class AuthController {
     @Req() req: RequestWithUser,
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
-    const {user} = req
-    
-    const access_token = await this.authService.generateToken(user, JwtType.ACCESS_TOKEN);
-    const refresh_token = await this.authService.generateToken(user, JwtType.REFRESH_TOKEN);
-    
-    const access_token_cookie = await this.authService.generateCookie(access_token, CookieType.ACCESS_TOKEN);
-    const refresh_token_cookie = await this.authService.generateCookie(refresh_token, CookieType.REFRESH_TOKEN);
+    const { user } = req;
+
+    const access_token = await this.authService.generateToken(
+      user,
+      JwtType.ACCESS_TOKEN,
+    );
+    const refresh_token = await this.authService.generateToken(
+      user,
+      JwtType.REFRESH_TOKEN,
+    );
+
+    const access_token_cookie = await this.authService.generateCookie(
+      access_token,
+      CookieType.ACCESS_TOKEN,
+    );
+    const refresh_token_cookie = await this.authService.generateCookie(
+      refresh_token,
+      CookieType.REFRESH_TOKEN,
+    );
     try {
       await this.authService.updateRtHash(user.id, refresh_token);
-      res.setHeader('Set-Cookie', [access_token_cookie, refresh_token_cookie]).json({ ...user });
+      res
+        .setHeader('Set-Cookie', [access_token_cookie, refresh_token_cookie])
+        .json({ ...user });
     } catch (error) {
-      throw new InternalServerErrorException('Something went wrong while setting cookies into response header');
+      throw new InternalServerErrorException(
+        'Something went wrong while setting cookies into response header',
+      );
     }
   }
 
   @Post('signout')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async signout(@GetCurrentUser() userData: User, @Res({ passthrough: true }) res: Response) {
+  async signout(
+    @GetCurrentUser() userData: User,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     return this.authService.signout(userData.id, res);
   }
 }
